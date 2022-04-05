@@ -1,7 +1,7 @@
 //! Configs for wallet app
 
 use anyhow::Error;
-use aptos_types::{PeerId, transaction::authenticator::AuthenticationKey};
+use aptos_types::{transaction::authenticator::AuthenticationKey};
 use dirs;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};

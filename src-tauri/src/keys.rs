@@ -1,11 +1,11 @@
 //! keygen
 
 use aptos_types::transaction::authenticator::AuthenticationKey;
-use bip32::{Mnemonic, Prefix, XPrv};
+use bip32::{Mnemonic};
 use rand_core::OsRng;
 use crate::wallet_error::WalletError;
 use crate::configs::default_accounts_db_path;
-use crate::{configs, configs_network, configs_profile, key_manager};
+
 use anyhow::{bail, Error};
 use move_core_types::account_address::AccountAddress;
 
