@@ -1,5 +1,8 @@
 //! wallets
 
+use aptos_types::transaction::authenticator::AuthenticationKey;
+use move_core_types::account_address::AccountAddress;
+
 use crate::configs::default_accounts_db_path;
 use crate::keys::{NewKeygen, AccountEntry, Accounts};
 use crate::wallet_error::WalletError;
@@ -15,10 +18,10 @@ pub fn keygen() -> Result<NewKeygen, WalletError> {
   keys::new_random()
   // dbg!("keygen");
 
-  // // Generate random Mnemonic using the default language (English)
+  // // // Generate random Mnemonic using the default language (English)
   // let mnemonic = Mnemonic::random(&mut OsRng, Default::default());
 
-  // // Derive a BIP39 seed value using the given password
+  // // // Derive a BIP39 seed value using the given password
   // let seed = mnemonic.to_seed("password");
 
   // // Derive a child `XPrv` using the provided BIP32 derivation path
@@ -86,9 +89,9 @@ fn map_get_balance(mut all_accounts: Accounts) -> Result<Accounts, WalletError> 
 }
 
 /// TODO: use actual type for account
-fn find_account_data(account: &str) -> Result<AccountEntry, WalletError> {
+fn find_account_data(account: &AccountAddress) -> Result<AccountEntry, WalletError> {
   let all = keys::read_accounts()?;
-  match all.accounts.into_iter().find(|a| a.account == account) {
+  match all.accounts.into_iter().find(|a| &a.account == account) {
     Some(entry) => Ok(entry),
     None => Err(WalletError::misc("could not find an account")),
   }
@@ -98,8 +101,8 @@ fn find_account_data(account: &str) -> Result<AccountEntry, WalletError> {
 #[tauri::command]
 pub fn add_account(
   nickname: String,
-  authkey: String,
-  address: String,
+  authkey: AuthenticationKey,
+  address: AccountAddress,
 ) -> Result<Accounts, WalletError> {
 
   keys::insert_account_db(nickname, address, authkey).map_err(|e| {
@@ -112,10 +115,10 @@ pub fn add_account(
 
 /// Switch tx profiles, change tauriWallet.toml to use selected account
 #[tauri::command(async)]
-pub fn switch_profile(account: String) -> Result<AccountEntry, WalletError> {
+pub fn switch_profile(account: AccountAddress) -> Result<AccountEntry, WalletError> {
   match find_account_data(&account) {
     Ok(entry) => {
-      configs_profile::set_account_profile(account.clone(), entry.authkey.clone())
+      configs_profile::set_account_profile(&account, entry.authkey.clone())
         .map_err(|_| WalletError::misc("could not switch profile"))?;
       Ok(AccountEntry::new(account, entry.authkey))
     }

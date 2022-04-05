@@ -1,9 +1,11 @@
 //! Configs for wallet app
 
 use anyhow::Error;
+use aptos_types::{PeerId, transaction::authenticator::AuthenticationKey};
 use dirs;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
+use move_core_types::account_address::AccountAddress;
 
 use std::{
   fs::{self, File},
@@ -121,10 +123,10 @@ impl Default for ChainInfo {
 // NOTE: all account and auth_key should use the actual type, not String.
 pub struct Profile {
   /// The wallet account
-  pub account: String,
+  pub account: AccountAddress,
 
   /// The account's authkey.
-  pub auth_key: String,
+  pub auth_key: AuthenticationKey,
 
   /// Other nodes to connect for fallback connections
   pub upstream_nodes: Vec<Url>,
@@ -133,8 +135,8 @@ pub struct Profile {
 impl Default for Profile {
   fn default() -> Self {
     Self {
-      account: "".to_owned(),
-      auth_key: "".to_owned(),
+      account: AccountAddress::ZERO,
+      auth_key: AuthenticationKey::zero(),
       upstream_nodes: vec!["http://localhost:8080".parse().expect("parse url")],
     }
   }

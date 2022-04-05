@@ -1,13 +1,15 @@
 //! query the chain
+use move_core_types::account_address::AccountAddress;
+
 use crate::wallet_error::WalletError;
 
 #[tauri::command(async)]
-pub fn query_balance(account: String) -> Result<u64, WalletError> {
+pub fn query_balance(account: AccountAddress) -> Result<u64, WalletError> {
   get_balance(&account)
 }
 
 // NOTE: change String to Type
-pub fn get_balance(_account: &str) -> Result<u64, WalletError> {
+pub fn get_balance(_account: &AccountAddress) -> Result<u64, WalletError> {
   // Mock balance
   Ok(100)
 }

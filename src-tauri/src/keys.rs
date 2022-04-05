@@ -1,12 +1,13 @@
 //! keygen
 
+use aptos_types::transaction::authenticator::AuthenticationKey;
 use bip32::{Mnemonic, Prefix, XPrv};
 use rand_core::OsRng;
 use crate::wallet_error::WalletError;
 use crate::configs::default_accounts_db_path;
 use crate::{configs, configs_network, configs_profile, key_manager};
 use anyhow::{bail, Error};
-
+use move_core_types::account_address::AccountAddress;
 
 use std::fs::{create_dir_all, File};
 use std::io::prelude::*;
@@ -19,8 +20,8 @@ pub struct Accounts {
 
 #[derive(serde::Deserialize, serde::Serialize, Debug, PartialEq)]
 pub struct AccountEntry {
-  pub account: String,
-  pub authkey: String,
+  pub account: AccountAddress,
+  pub authkey: AuthenticationKey,
   pub nickname: String,
   pub on_chain: bool,
   pub balance: Option<u64>,
@@ -28,11 +29,11 @@ pub struct AccountEntry {
 
 impl AccountEntry {
   // NOTE: You don't neeed to use String here if your keys have Serde serialization. This is a placeholder.
-  pub fn new(address: String, authkey: String) -> Self {
+  pub fn new(address: AccountAddress, authkey: AuthenticationKey) -> Self {
     AccountEntry {
-      account: address.clone(),
+      account: address,
       authkey,
-      nickname: get_short(address),
+      nickname: get_short(&address),
       on_chain: false,
       balance: None,
     }
@@ -48,23 +49,29 @@ pub struct NewKeygen {
 
 pub fn new_random() -> Result<NewKeygen, WalletError> {
 
-  // Generate random Mnemonic using the default language (English)
+    // Generate random Mnemonic using the default language (English)
   let mnemonic = Mnemonic::random(&mut OsRng, Default::default());
 
   // Derive a BIP39 seed value using the given password
+
   let seed = mnemonic.to_seed("password");
+  
+  let bytes: [u8; 32] = seed.as_bytes()[0..32].try_into()
+    .map_err(|_|{ WalletError::misc("keygen")})?;
+  
+  // TODO: Aptos uses a different size seed.
+  let mut keys = aptos_keygen::KeyGen::from_seed(bytes);
 
-  // Derive a child `XPrv` using the provided BIP32 derivation path
-  let child_path = "m/0/2147483647'/1/2147483646'";
-  let child_xprv = XPrv::derive_from_path(&seed, &child_path.parse().unwrap()).unwrap();
+  let pair = keys.generate_keypair();
+  let authkey = AuthenticationKey::ed25519(&pair.1);
 
-  // Get the `XPub` associated with `child_xprv`.
-  let child_xpub = child_xprv.public_key();
+  let creds = keys.generate_credentials_for_account_creation();
+
 
   let res = NewKeygen {
     entry: AccountEntry::new(
-      child_xpub.to_string(Prefix::XPUB),
-      child_xpub.to_string(Prefix::XPUB),
+      creds.2,
+      authkey
     ),
     mnem: mnemonic.phrase().to_owned(),
   };
@@ -73,54 +80,43 @@ pub fn new_random() -> Result<NewKeygen, WalletError> {
 }
 
 
-pub fn danger_init_from_mnem(_mnem: String) -> Result<AccountEntry, WalletError> {
+pub fn danger_init_from_mnem(mnem: String) -> Result<AccountEntry, WalletError> {
   dbg!("init from mnem");
-  let init = configs::is_initialized();
-
   // Generate random Mnemonic using the default language (English)
-  let mnemonic = Mnemonic::random(&mut OsRng, Default::default());
+  let mnemonic = Mnemonic::new(mnem, Default::default())
+  .map_err(|_|{ WalletError::misc("cannot derive keys from mnemonic")})?;
 
   // Derive a BIP39 seed value using the given password
   let seed = mnemonic.to_seed("password");
+  
+  let bytes: [u8; 32] = seed.as_bytes()[0..32].try_into()
+    .map_err(|_|{ WalletError::misc("keygen")})?;
+  
+  // TODO: Aptos uses a different size seed.
+  let mut keys = aptos_keygen::KeyGen::from_seed(bytes);
 
-  ///// DEMO ONLY!  /////
-  // Derive the root `XPrv` from the `seed` value
-  let _root_xprv = XPrv::new(&seed).unwrap();
-  // Derive a child `XPrv` using the provided BIP32 derivation path
-  let child_path = "m/0/2147483647'/1/2147483646'";
-  let child_xprv = XPrv::derive_from_path(&seed, &child_path.parse().unwrap()).unwrap();
+  let pair = keys.generate_keypair();
+  let authkey = AuthenticationKey::ed25519(&pair.1);
 
-  // // Get the `XPub` associated with `child_xprv`.
-  let child_xpub = child_xprv.public_key();
+  let creds = keys.generate_credentials_for_account_creation();
 
-  // NOTE: DEMO ONLY!
-  let address = child_xpub.to_string(Prefix::XPUB);
-  let priv_key = child_xprv.to_string(Prefix::XPUB).as_str().to_owned();
 
-  let authkey = child_xpub.to_string(Prefix::XPUB);
+  // let res = NewKeygen {
+  //   entry: AccountEntry::new(
+  //     creds.2,
+  //     authkey
+  //   ),
+  //   mnem: mnemonic.phrase().to_owned(),
+  // };
 
-  // first try to insert into DB.
-  // it will error if the account already exists.
-  insert_account_db(get_short(address.clone()), address.clone(), authkey.clone())?;
-
-  key_manager::set_private_key(&address.clone().to_string(), priv_key)
-    .map_err(|e| WalletError::config(&e.to_string()))?;
-
-  configs_profile::set_account_profile(address.clone(), authkey.clone())?;
-
-  // this may be the first account and may not yet be initialized.
-  if !init {
-    configs_network::set_network_configs(configs_network::Networks::Mainnet)?;
-  }
-
-  Ok(AccountEntry::new(address, authkey))
+  Ok(AccountEntry::new(creds.2, authkey))
 }
 
 /// insert into accounts file
 pub fn insert_account_db(
   nickname: String,
-  address: String, // TODO: Change this to the actual type
-  authkey: String, // TODO: Change this to the actual type
+  address: AccountAddress, // TODO: Change this to the actual type
+  authkey: AuthenticationKey, // TODO: Change this to the actual type
 ) -> Result<Accounts, Error> {
   let app_dir = default_accounts_db_path();
   // get all accounts
@@ -180,6 +176,6 @@ pub fn read_accounts() -> Result<Accounts, Error> {
   }
 }
 
-fn get_short(acc: String) -> String {
-  acc[..3].to_owned()
+fn get_short(acc: &AccountAddress) -> String {
+  acc.to_string()[..3].to_owned()
 }
