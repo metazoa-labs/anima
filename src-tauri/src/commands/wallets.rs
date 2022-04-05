@@ -16,30 +16,6 @@ use std::fs::{self};
 #[tauri::command]
 pub fn keygen() -> Result<NewKeygen, WalletError> {
   keys::new_random()
-  // dbg!("keygen");
-
-  // // // Generate random Mnemonic using the default language (English)
-  // let mnemonic = Mnemonic::random(&mut OsRng, Default::default());
-
-  // // // Derive a BIP39 seed value using the given password
-  // let seed = mnemonic.to_seed("password");
-
-  // // Derive a child `XPrv` using the provided BIP32 derivation path
-  // let child_path = "m/0/2147483647'/1/2147483646'";
-  // let child_xprv = XPrv::derive_from_path(&seed, &child_path.parse().unwrap()).unwrap();
-
-  // // Get the `XPub` associated with `child_xprv`.
-  // let child_xpub = child_xprv.public_key();
-
-  // let res = NewKeygen {
-  //   entry: AccountEntry::new(
-  //     child_xpub.to_string(Prefix::XPUB),
-  //     child_xpub.to_string(Prefix::XPUB),
-  //   ),
-  //   mnem: mnemonic.phrase().to_owned(),
-  // };
-
-  // Ok(res)
 }
 
 /// default way accounts get initialized in TauriWallet
@@ -51,7 +27,7 @@ pub fn is_init() -> Result<bool, WalletError> {
 /// default way accounts get initialized in TauriWallet
 #[tauri::command]
 pub fn init_from_mnem(mnem: String) -> Result<AccountEntry, WalletError> {
-  keys::danger_init_from_mnem(mnem).map_err(|_| WalletError::config("could not initialize from mnemonic"))
+  keys::danger_init_from_mnem(mnem)
 }
 
 /// read all accounts from ACCOUNTS_DB_FILE
@@ -105,7 +81,11 @@ pub fn add_account(
   address: AccountAddress,
 ) -> Result<Accounts, WalletError> {
 
-  keys::insert_account_db(nickname, address, authkey).map_err(|e| {
+  dbg!("add account");
+  let mut entry = AccountEntry::new(address, authkey);
+  entry.nickname = nickname;
+
+  keys::insert_account_db(entry).map_err(|e| {
     WalletError::misc(&format!(
       "could not add account, message {:?}",
       e.to_string()

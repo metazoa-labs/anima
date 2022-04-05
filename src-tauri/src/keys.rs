@@ -18,7 +18,7 @@ pub struct Accounts {
   pub accounts: Vec<AccountEntry>,
 }
 
-#[derive(serde::Deserialize, serde::Serialize, Debug, PartialEq)]
+#[derive(serde::Deserialize, serde::Serialize, Debug, PartialEq, Clone)]
 pub struct AccountEntry {
   pub account: AccountAddress,
   pub authkey: AuthenticationKey,
@@ -67,14 +67,13 @@ pub fn new_random() -> Result<NewKeygen, WalletError> {
 
   let creds = keys.generate_credentials_for_account_creation();
 
+  let entry = AccountEntry::new(creds.2, authkey);
 
   let res = NewKeygen {
-    entry: AccountEntry::new(
-      creds.2,
-      authkey
-    ),
+    entry,
     mnem: mnemonic.phrase().to_owned(),
   };
+
 
   Ok(res)
 }
@@ -100,36 +99,19 @@ pub fn danger_init_from_mnem(mnem: String) -> Result<AccountEntry, WalletError> 
 
   let creds = keys.generate_credentials_for_account_creation();
 
+  let entry = AccountEntry::new(creds.2, authkey);
+  insert_account_db(entry.clone())?;
 
-  // let res = NewKeygen {
-  //   entry: AccountEntry::new(
-  //     creds.2,
-  //     authkey
-  //   ),
-  //   mnem: mnemonic.phrase().to_owned(),
-  // };
-
-  Ok(AccountEntry::new(creds.2, authkey))
+  Ok(entry)
 }
 
 /// insert into accounts file
 pub fn insert_account_db(
-  nickname: String,
-  address: AccountAddress, // TODO: Change this to the actual type
-  authkey: AuthenticationKey, // TODO: Change this to the actual type
+  new_account: AccountEntry
 ) -> Result<Accounts, Error> {
   let app_dir = default_accounts_db_path();
   // get all accounts
   let mut all = read_accounts()?;
-
-  // push new account
-  let new_account = AccountEntry {
-    account: address,
-    authkey: authkey,
-    nickname: nickname,
-    on_chain: false,
-    balance: None,
-  };
 
   if !all.accounts.contains(&new_account) {
     all.accounts.push(new_account);

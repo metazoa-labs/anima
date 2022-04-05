@@ -31,6 +31,7 @@
 
   let isSubmitting = false;
   function handleAdd() {
+    console.log(">>> handleAdd");
     isSubmitting = true;
 
     // submit
