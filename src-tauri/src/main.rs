@@ -13,6 +13,7 @@ pub mod configs_profile;
 pub mod key_manager;
 pub mod rpc_playlist;
 pub mod wallet_error;
+pub mod mnemonic;
 
 use crate::commands::*;
 use tauri::{Menu, MenuItem, Submenu};
