@@ -109,6 +109,7 @@ pub fn danger_init_from_mnem(mnem: String) -> Result<AccountEntry, WalletError> 
 pub fn insert_account_db(
   new_account: AccountEntry
 ) -> Result<Accounts, Error> {
+  dbg!("insert_account_db");
   let app_dir = default_accounts_db_path();
   // get all accounts
   let mut all = read_accounts()?;
