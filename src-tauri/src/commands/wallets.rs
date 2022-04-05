@@ -3,12 +3,12 @@
 use crate::configs::default_accounts_db_path;
 use crate::keys::{NewKeygen, AccountEntry, Accounts};
 use crate::wallet_error::WalletError;
-use crate::{configs, configs_network, configs_profile, key_manager, keys};
-use anyhow::{bail, Error};
+use crate::{configs, configs_profile, keys};
+
 use super::get_events;
 use super::{get_balance, EventView};
-use std::fs::{self, create_dir_all, File};
-use std::io::prelude::*;
+use std::fs::{self};
+
 
 #[tauri::command]
 pub fn keygen() -> Result<NewKeygen, WalletError> {

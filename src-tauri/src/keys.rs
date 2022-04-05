@@ -6,9 +6,9 @@ use crate::wallet_error::WalletError;
 use crate::configs::default_accounts_db_path;
 use crate::{configs, configs_network, configs_profile, key_manager};
 use anyhow::{bail, Error};
-use super::get_events;
-use super::{get_balance, EventView};
-use std::fs::{self, create_dir_all, File};
+
+
+use std::fs::{create_dir_all, File};
 use std::io::prelude::*;
 
 
