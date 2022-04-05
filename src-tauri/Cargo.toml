@@ -31,6 +31,9 @@ hex = "0.4.3"
 dirs = "4.0.0"
 toml = "0.5.8"
 
+aptos-keygen = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "bedc99f124f162a898b5330ddc9537b27510fdfd"}
+
+
 [features]
 # by default Tauri runs in production mode
 # when `tauri dev` runs it is executed with `cargo run --no-default-features` if `devPath` is an URL
