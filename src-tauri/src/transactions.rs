@@ -1,5 +1,8 @@
 //! build transactions
 
+use aptos_sdk::{transaction_builder::TransactionFactory, types::LocalAccount, crypto::ed25519::Ed25519PublicKey};
+use aptos_types::transaction::SignedTransaction;
+
 pub fn create_user_account_by(
     factory: TransactionFactory,
     creator: &mut LocalAccount,
@@ -13,6 +16,33 @@ pub fn create_user_account_by(
     )
 }
 
+// async fn test_post_bcs_format_transaction() {
+//     // let mut context = new_test_context(current_function_name!());
+//     // let account = context.gen_account();
+//     let txn = create_user_account(factory, &sending_account, &new_account);
+//     let body = bcs::to_bytes(&txn).unwrap();
+//     let resp = context
+//         .expect_status_code(202)
+//         .post_bcs_txn("/transactions", body)
+//         .await;
+//     context.check_golden_output(resp.clone());
+
+//     // ensure ed25519 sig txn can be submitted into mempool by JSON format
+//     context
+//         .expect_status_code(202)
+//         .post("/transactions", resp)
+//         .await;
+// }
+
+
+// pub async fn post_bcs_txn(path: &str, body: impl AsRef<[u8]>) -> Value {
+//     warp::test::request()
+//         .method("POST")
+//         .path(path)
+//         .header(CONTENT_TYPE, mime_types::BCS_SIGNED_TRANSACTION)
+//         .body(body)
+//         .await
+// }
 
 // async fn test_signing_message_with_payload(
 //     mut context: TestContext,
@@ -97,24 +127,4 @@ pub fn create_user_account_by(
 
 
 
-// #[tokio::test]
-// async fn test_post_bcs_format_transaction() {
-//     let mut context = new_test_context(current_function_name!());
-//     let account = context.gen_account();
-//     let txn = context.create_user_account(&account);
-//     let body = bcs::to_bytes(&txn).unwrap();
-//     let resp = context
-//         .expect_status_code(202)
-//         .post_bcs_txn("/transactions", body)
-//         .await;
-//     context.check_golden_output(resp.clone());
 
-//     // ensure ed25519 sig txn can be submitted into mempool by JSON format
-//     context
-//         .expect_status_code(202)
-//         .post("/transactions", resp)
-//         .await;
-// }
-
-use aptos_sdk::{transaction_builder::TransactionFactory, types::LocalAccount, crypto::ed25519::Ed25519PublicKey};
-use aptos_types::transaction::SignedTransaction;

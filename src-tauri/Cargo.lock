@@ -6599,6 +6599,7 @@ dependencies = [
  "tauri-build",
  "toml",
  "url",
+ "warp",
 ]
 
 [[package]]
