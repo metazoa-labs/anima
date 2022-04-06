@@ -43,7 +43,7 @@
   })
 </script>
 
-<main class="uk-height-viewport">
+<main class="uk-height-viewport gradient">
   <div class="uk-container">
     <Router>
       <Nav />

@@ -8,8 +8,10 @@
 </script>
 
 <main style="position:absolute" class="uk-position-center uk-margin-large">
+  <img src="/anima-logo-white.svg" alt="drawing" width="100%"/>
+
   <div class="uk-container uk-align-center">
-    <h1 class="  uk-text-uppercase uk-text-center">{$_("wallet.tauriWallet")}</h1>
+    <!-- <h1 class="  uk-text-uppercase uk-text-center">{$_("wallet.tauriWallet")}</h1> -->
     <h5 class="  uk-text-uppercase uk-text-center">{$_("wallet.newbie_message")}</h5>
   </div>
 
