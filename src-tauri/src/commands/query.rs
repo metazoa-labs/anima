@@ -1,7 +1,7 @@
 //! query the chain
 use move_core_types::account_address::AccountAddress;
 
-use crate::wallet_error::WalletError;
+use crate::{wallet_error::WalletError, query, api::*};
 
 #[tauri::command(async)]
 pub fn query_balance(account: AccountAddress) -> Result<u64, WalletError> {
@@ -49,3 +49,14 @@ fn dummy_event() -> EventView {
 pub fn get_events(_account: String) -> Result<Vec<EventView>, WalletError> {
   Ok(vec![dummy_event()])
 }
+
+#[tauri::command(async)]
+pub async fn get_root_account() -> Result<String, String> {
+  match query::get_association_state().await {
+    Ok(r) => Ok(r.to_string()),
+    Err(e) => Err(e.to_string()),
+}
+  // Ok(r.to_string())
+}
+
+// get_root_account

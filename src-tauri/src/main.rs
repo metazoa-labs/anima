@@ -77,14 +77,15 @@ fn main() {
       // Queries
       query_balance,
       // Transactions
-
       get_env,
       set_env,
       // Version
       get_app_version,
       // Preferences
       get_preferences,
-      set_preferences_locale
+      set_preferences_locale,
+      // Debug
+      get_root_account,
     ])
     .menu(menu)
     .run(tauri::generate_context!())
