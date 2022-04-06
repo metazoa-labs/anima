@@ -4,22 +4,7 @@ use aptos_api_types::*;
 
 use reqwest::{header::CONTENT_TYPE};
 
-
-
-pub const URL: &str = "http:/0.0.0.0:8080";
-
-
-// URL
-
-// request handler
-
-// query chain state
-
-// query account state
-
-// submit transaction
-
-// sign a transaction
+pub const API_ENDPOINT: &str = "http:/0.0.0.0:8080";
 
 pub async fn execute_request(req: reqwest::RequestBuilder) -> anyhow::Result<serde_json::Value> {
     // let resp = self.reply(req).await;

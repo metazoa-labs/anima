@@ -1,7 +1,8 @@
+//! query
+use reqwest::Url;
+use crate::api::{API_ENDPOINT, execute_request};
 
-
-
-pub async fn test_get_account_resources_by_valid_account_address() -> anyhow::Result<serde_json::Value> {
+pub async fn get_association_state() -> anyhow::Result<serde_json::Value> {
     let address = "0xA550C18";
     get_account_resources(address).await
 }
@@ -12,7 +13,7 @@ fn account_resources_path(address: &str) -> String {
 }
 
 pub async fn get_account_resources(address: &str) -> anyhow::Result<serde_json::Value> {
-  let base: Url = URL.parse().unwrap();
+  let base: Url = API_ENDPOINT.parse().unwrap();
   let url = base.join(&account_resources_path(address))?;
   let r = reqwest::Client::new();
 
@@ -35,7 +36,3 @@ pub async fn get_account_resources(address: &str) -> anyhow::Result<serde_json::
 //     let resp = context.get("/transactions").await;
 //     context.check_golden_output(resp);
 // }
-
-use reqwest::Url;
-
-use crate::api::{URL, execute_request};
