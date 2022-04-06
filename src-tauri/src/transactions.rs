@@ -1,7 +1,14 @@
 //! build transactions
 
-use aptos_sdk::{transaction_builder::TransactionFactory, types::LocalAccount, crypto::ed25519::Ed25519PublicKey};
+use aptos_sdk::{
+    crypto::ed25519::Ed25519PublicKey, transaction_builder::TransactionFactory, types::LocalAccount,
+};
 use aptos_types::transaction::SignedTransaction;
+use reqwest::{header::CONTENT_TYPE, Url};
+use aptos_api_types::*;
+
+
+pub const URL: &str = "http:/0.0.0.0:8080";
 
 pub fn create_user_account_by(
     factory: TransactionFactory,
@@ -34,15 +41,67 @@ pub fn create_user_account_by(
 //         .await;
 // }
 
+pub async fn post_bcs_txn(path: &str, body: Vec<u8>) -> anyhow::Result<serde_json::Value> {
+    // let r = reqwest::blocking::Request::new("POST".into(), URL);
+    let base: Url = URL.parse().unwrap();
+    let url = base.join(path).unwrap();
+    // let r = reqwest::Request::new(Method::POST, url )
 
-// pub async fn post_bcs_txn(path: &str, body: impl AsRef<[u8]>) -> Value {
-//     warp::test::request()
-//         .method("POST")
-//         .path(path)
-//         .header(CONTENT_TYPE, mime_types::BCS_SIGNED_TRANSACTION)
-//         .body(body)
-//         .await
-// }
+    let client = reqwest::Client::new();
+    let req = client.post(url)
+    .header(CONTENT_TYPE, mime_types::BCS_SIGNED_TRANSACTION)
+    .body(body);
+
+    execute_request(req).await
+}
+
+pub async fn execute_request(req: reqwest::RequestBuilder) -> anyhow::Result<serde_json::Value> {
+        // let resp = self.reply(req).await;
+        // req.reply(f).a
+        // resp = reqwest::blocking::RequestBuilder::
+        let resp = req.send().await.unwrap();
+
+        let headers = resp.headers();
+        assert_eq!(headers[CONTENT_TYPE], mime_types::JSON);
+
+        let s = resp.text().await.unwrap();
+        serde_json::from_str(&s).map_err(|e| anyhow::anyhow!(e.to_string()))
+
+        // if !(resp.status() < 300) {
+        //     let ledger_info = self.get_latest_ledger_info();
+        //     assert_eq!(headers[X_APTOS_CHAIN_ID], "4");
+        //     assert_eq!(
+        //         headers[X_APTOS_LEDGER_VERSION],
+        //         ledger_info.version().to_string()
+        //     );
+        //     assert_eq!(
+        //         headers[X_APTOS_LEDGER_TIMESTAMP],
+        //         ledger_info.timestamp().to_string()
+        //     );
+        // }
+
+        // assert_eq!(
+        //     202,
+        //     resp.status(),
+        //     "\nresponse: {}",
+        //     pretty(&body)
+        // );
+
+        // if self.expect_status_code < 300 {
+        //     let ledger_info = self.get_latest_ledger_info();
+        //     assert_eq!(headers[X_APTOS_CHAIN_ID], "4");
+        //     assert_eq!(
+        //         headers[X_APTOS_LEDGER_VERSION],
+        //         ledger_info.version().to_string()
+        //     );
+        //     assert_eq!(
+        //         headers[X_APTOS_LEDGER_TIMESTAMP],
+        //         ledger_info.timestamp().to_string()
+        //     );
+        // }
+
+        // body
+    }
 
 // async fn test_signing_message_with_payload(
 //     mut context: TestContext,
@@ -105,8 +164,6 @@ pub fn create_user_account_by(
 //     assert_eq!(ledger["ledger_version"].as_str().unwrap(), "2"); // one metadata + one txn
 // }
 
-
-
 // #[tokio::test]
 // async fn test_signing_message_with_script_function_payload() {
 //     let mut context = new_test_context(current_function_name!());
@@ -124,7 +181,3 @@ pub fn create_user_account_by(
 //     });
 //     test_signing_message_with_payload(context, txn, payload).await;
 // }
-
-
-
-
