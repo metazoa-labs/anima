@@ -16,6 +16,8 @@ pub mod wallet_error;
 pub mod mnemonic;
 pub mod keys;
 pub mod transactions;
+pub mod api;
+pub mod query;
 
 use crate::commands::*;
 use tauri::{Menu, MenuItem, Submenu};

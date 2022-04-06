@@ -11,9 +11,10 @@ use reqwest::{header::CONTENT_TYPE, Url};
 use rand_core::OsRng;
 use aptos_types::chain_id::ChainId;
 
+use crate::api::{URL, execute_request};
+
 // Note: examples come from: https://github.com/aptos-labs/aptos-core/blob/70f68edcd1c0056cb082172065320e5ea1e54d15/api/src/tests/transactions_test.rs
 
-pub const URL: &str = "http:/0.0.0.0:8080";
 
 pub fn create_user_account_by(
     factory: TransactionFactory,
@@ -58,18 +59,7 @@ pub async fn post_bcs_txn(path: &str, body: Vec<u8>) -> anyhow::Result<serde_jso
     execute_request(req).await
 }
 
-pub async fn execute_request(req: reqwest::RequestBuilder) -> anyhow::Result<serde_json::Value> {
-    // let resp = self.reply(req).await;
-    // req.reply(f).a
-    // resp = reqwest::blocking::RequestBuilder::
-    let resp = req.send().await.unwrap();
 
-    let headers = resp.headers();
-    assert_eq!(headers[CONTENT_TYPE], mime_types::JSON);
-
-    let s = resp.text().await.unwrap();
-    serde_json::from_str(&s).map_err(|e| anyhow::anyhow!(e.to_string()))
-}
 
 // async fn test_signing_message_with_payload(
 //     mut context: TestContext,
