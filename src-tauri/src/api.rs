@@ -32,7 +32,8 @@ pub async fn execute_request(req: reqwest::RequestBuilder) -> anyhow::Result<ser
 }
 
 
-fn todo_deserialize_response(val: serde_json::Value) {
+// We want to get the JSON object back into a type.
+fn _todo_deserialize_response(val: serde_json::Value) {
   let s: Vec<ApiSchema> = serde_json::from_value(val).unwrap();
   dbg!(&s);
 }

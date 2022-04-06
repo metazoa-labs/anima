@@ -28,7 +28,7 @@ pub fn create_user_account_by(
     )
 }
 
-async fn test_post_bcs_format_transaction() -> anyhow::Result<serde_json::Value>  {
+async fn _test_post_bcs_format_transaction() -> anyhow::Result<serde_json::Value>  {
     // let mut context = new_test_context(current_function_name!());
     // let account = context.gen_account();
     // TODO: Get correct chain ID

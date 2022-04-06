@@ -56,7 +56,4 @@ pub async fn get_root_account() -> Result<String, String> {
     Ok(r) => Ok(r.to_string()),
     Err(e) => Err(e.to_string()),
 }
-  // Ok(r.to_string())
 }
-
-// get_root_account
