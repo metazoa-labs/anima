@@ -1,6 +1,6 @@
 //! query
 use reqwest::Url;
-use crate::api::{API_ENDPOINT, execute_request};
+use crate::api::api::{API_ENDPOINT, execute_request};
 
 pub async fn get_association_state() -> anyhow::Result<serde_json::Value> {
     let address = "0xA550C18";

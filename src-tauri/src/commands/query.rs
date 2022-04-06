@@ -1,7 +1,7 @@
 //! query the chain
 use move_core_types::account_address::AccountAddress;
 
-use crate::{wallet_error::WalletError, query};
+use crate::{wallet_error::WalletError, api::query};
 
 #[tauri::command(async)]
 pub fn query_balance(account: AccountAddress) -> Result<u64, WalletError> {

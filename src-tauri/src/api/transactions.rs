@@ -11,7 +11,7 @@ use reqwest::{header::CONTENT_TYPE, Url};
 use rand_core::OsRng;
 use aptos_types::chain_id::ChainId;
 
-use crate::api::{API_ENDPOINT, execute_request};
+use crate::api::api::{API_ENDPOINT, execute_request};
 
 // Note: examples come from: https://github.com/aptos-labs/aptos-core/blob/70f68edcd1c0056cb082172065320e5ea1e54d15/api/src/tests/transactions_test.rs
 
