@@ -1,12 +1,17 @@
 //! build transactions
 
-use aptos_sdk::{
-    crypto::ed25519::Ed25519PublicKey, transaction_builder::TransactionFactory, types::LocalAccount,
-};
-use aptos_types::transaction::SignedTransaction;
-use reqwest::{header::CONTENT_TYPE, Url};
 use aptos_api_types::*;
+use aptos_sdk::{
+    crypto::ed25519::Ed25519PublicKey,
+    transaction_builder::TransactionFactory,
+    types::LocalAccount,
+};
+use aptos_types::{transaction::SignedTransaction};
+use reqwest::{header::CONTENT_TYPE, Url};
+use rand_core::OsRng;
+use aptos_types::chain_id::ChainId;
 
+// Note: examples come from: https://github.com/aptos-labs/aptos-core/blob/70f68edcd1c0056cb082172065320e5ea1e54d15/api/src/tests/transactions_test.rs
 
 pub const URL: &str = "http:/0.0.0.0:8080";
 
@@ -15,7 +20,6 @@ pub fn create_user_account_by(
     creator: &mut LocalAccount,
     public_key: &Ed25519PublicKey,
 ) -> SignedTransaction {
-    // let factory = self.transaction_factory();
     creator.sign_with_transaction_builder(
         factory
             .create_user_account(public_key)
@@ -23,85 +27,49 @@ pub fn create_user_account_by(
     )
 }
 
-// async fn test_post_bcs_format_transaction() {
-//     // let mut context = new_test_context(current_function_name!());
-//     // let account = context.gen_account();
-//     let txn = create_user_account(factory, &sending_account, &new_account);
-//     let body = bcs::to_bytes(&txn).unwrap();
-//     let resp = context
-//         .expect_status_code(202)
-//         .post_bcs_txn("/transactions", body)
-//         .await;
-//     context.check_golden_output(resp.clone());
+async fn test_post_bcs_format_transaction() -> anyhow::Result<serde_json::Value>  {
+    // let mut context = new_test_context(current_function_name!());
+    // let account = context.gen_account();
+    // TODO: Get correct chain ID
+    let factory = TransactionFactory::new(ChainId::new(1));
 
-//     // ensure ed25519 sig txn can be submitted into mempool by JSON format
-//     context
-//         .expect_status_code(202)
-//         .post("/transactions", resp)
-//         .await;
-// }
+    // create random
+    let mut random_sending_account = LocalAccount::generate(&mut OsRng);
+    let random_new_account = LocalAccount::generate(&mut OsRng);
+
+    let txn = create_user_account_by(factory, &mut random_sending_account, &random_new_account.public_key());
+
+    let body = bcs::to_bytes(&txn).unwrap();
+    post_bcs_txn("/transactions", body)
+    .await
+
+}
 
 pub async fn post_bcs_txn(path: &str, body: Vec<u8>) -> anyhow::Result<serde_json::Value> {
-    // let r = reqwest::blocking::Request::new("POST".into(), URL);
     let base: Url = URL.parse().unwrap();
     let url = base.join(path).unwrap();
-    // let r = reqwest::Request::new(Method::POST, url )
 
     let client = reqwest::Client::new();
-    let req = client.post(url)
-    .header(CONTENT_TYPE, mime_types::BCS_SIGNED_TRANSACTION)
-    .body(body);
+    let req = client
+        .post(url)
+        .header(CONTENT_TYPE, mime_types::BCS_SIGNED_TRANSACTION)
+        .body(body);
 
     execute_request(req).await
 }
 
 pub async fn execute_request(req: reqwest::RequestBuilder) -> anyhow::Result<serde_json::Value> {
-        // let resp = self.reply(req).await;
-        // req.reply(f).a
-        // resp = reqwest::blocking::RequestBuilder::
-        let resp = req.send().await.unwrap();
+    // let resp = self.reply(req).await;
+    // req.reply(f).a
+    // resp = reqwest::blocking::RequestBuilder::
+    let resp = req.send().await.unwrap();
 
-        let headers = resp.headers();
-        assert_eq!(headers[CONTENT_TYPE], mime_types::JSON);
+    let headers = resp.headers();
+    assert_eq!(headers[CONTENT_TYPE], mime_types::JSON);
 
-        let s = resp.text().await.unwrap();
-        serde_json::from_str(&s).map_err(|e| anyhow::anyhow!(e.to_string()))
-
-        // if !(resp.status() < 300) {
-        //     let ledger_info = self.get_latest_ledger_info();
-        //     assert_eq!(headers[X_APTOS_CHAIN_ID], "4");
-        //     assert_eq!(
-        //         headers[X_APTOS_LEDGER_VERSION],
-        //         ledger_info.version().to_string()
-        //     );
-        //     assert_eq!(
-        //         headers[X_APTOS_LEDGER_TIMESTAMP],
-        //         ledger_info.timestamp().to_string()
-        //     );
-        // }
-
-        // assert_eq!(
-        //     202,
-        //     resp.status(),
-        //     "\nresponse: {}",
-        //     pretty(&body)
-        // );
-
-        // if self.expect_status_code < 300 {
-        //     let ledger_info = self.get_latest_ledger_info();
-        //     assert_eq!(headers[X_APTOS_CHAIN_ID], "4");
-        //     assert_eq!(
-        //         headers[X_APTOS_LEDGER_VERSION],
-        //         ledger_info.version().to_string()
-        //     );
-        //     assert_eq!(
-        //         headers[X_APTOS_LEDGER_TIMESTAMP],
-        //         ledger_info.timestamp().to_string()
-        //     );
-        // }
-
-        // body
-    }
+    let s = resp.text().await.unwrap();
+    serde_json::from_str(&s).map_err(|e| anyhow::anyhow!(e.to_string()))
+}
 
 // async fn test_signing_message_with_payload(
 //     mut context: TestContext,

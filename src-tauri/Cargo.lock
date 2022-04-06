@@ -131,6 +131,7 @@ dependencies = [
  "aptos-keygen",
  "aptos-sdk",
  "aptos-types",
+ "bcs",
  "bip32",
  "built",
  "dirs",
