@@ -1,6 +1,6 @@
 ## Anima Wallet
 
-The first, best, and most fun wallet for the Aptos ecosystem.
+A crypto wallet for the Aptos ecosystem.
 
 ## Based on Tauri-Wallet
 A framework for crypto wallets using Rust and Typescript, thanks to Tauri and Svelte.
