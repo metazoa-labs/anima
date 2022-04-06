@@ -2,6 +2,8 @@
 
 A crypto wallet for the Aptos ecosystem.
 
+![marquee](./assets/marquee.svg)
+
 ## Based on Tauri-Wallet
 A framework for crypto wallets using Rust and Typescript, thanks to Tauri and Svelte.
 
