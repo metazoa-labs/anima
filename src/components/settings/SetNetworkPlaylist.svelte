@@ -2,7 +2,7 @@
   import { Link } from "svelte-navigator";
   import type { WalletError } from "../../walletError";
   import { raise_error } from "../../walletError";
-  import { network_profile, refreshWaypoint } from "../../networks";
+  import { network_profile } from "../../networks";
   import type { NetworkProfile} from "../../networks";
   import { invoke } from "@tauri-apps/api/tauri";
   import { routes } from "../../routes";
