@@ -49,7 +49,7 @@
   <div class="uk-container">
     <Router>
       <Nav />
-      <div class="uk-background-muted uk-margin-large">
+      <div class="uk-margin-large">
         <Route path={routes.home} component={Wallet} primary={false} />
         <Route
           path={routes.accountFromMnem}
