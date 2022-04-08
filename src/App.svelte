@@ -19,8 +19,8 @@
   import { getVersion } from "./version";
   import { walletTick } from "./tick";
   import { init_preferences } from "./preferences";
-import { initTitleBar } from "./windowTitle";
-  
+  import { initTitleBar } from "./windowTitle";
+
   init_preferences();
 
   let healthTick;
@@ -40,12 +40,13 @@ import { initTitleBar } from "./windowTitle";
     healthTick = setInterval(walletTick, 30000); // do a healthcheck, this is async
 
     debugMode.subscribe(b => debug = b);
-    
   });
 
   onDestroy(() => {
     clearInterval(healthTick);
   })
+
+
 </script>
 
 <main class="uk-height-viewport gradient uk-light">
