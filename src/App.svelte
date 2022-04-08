@@ -19,6 +19,7 @@
   import { getVersion } from "./version";
   import { walletTick } from "./tick";
   import { init_preferences } from "./preferences";
+import { initTitleBar } from "./windowTitle";
   
   init_preferences();
 
@@ -27,6 +28,8 @@
 
   onMount(async () => {
 
+    initTitleBar();
+    
     isWalletInit();
 
     getEnv();
