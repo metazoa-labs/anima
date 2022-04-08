@@ -7,7 +7,7 @@
 
   onMount(async () => {
     unsubs = network_profile.subscribe((network) => {
-      isTestNet = network.chain_id == Networks.Rex;
+      isTestNet = network.chain_id == Networks.Testnet;
     });
   });
 

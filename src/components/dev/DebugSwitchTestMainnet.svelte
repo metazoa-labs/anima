@@ -57,9 +57,9 @@
         class="uk-radio"
         type="radio"
         name="networkCb"
-        checked={current_chain_id == "Rex"}
-        on:click={() => setNetwork(Networks.Rex)}
-      /> Rex (testnet)
+        checked={current_chain_id == "Testnet"}
+        on:click={() => setNetwork(Networks.Testnet)}
+      /> Testnet
     </label>
   </div>
 
