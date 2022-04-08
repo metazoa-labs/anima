@@ -1,3 +1,4 @@
+
 import { writable } from "svelte/store";
 import type { WalletError } from "./walletError";
 
@@ -7,17 +8,18 @@ import type { WalletError } from "./walletError";
 // the state get switeched to false whenever a new backlog submission happens.
 // todo: each error needs have its own rules for clearing
 
-export const displayInsufficientBalance = writable<WalletError>({});
-export const displayWrongDifficulty = writable<WalletError>({});
-export const displayTooManyProofs = writable<WalletError>({});
-export const displayDiscontinuity = writable<WalletError>({});
-export const displayInvalidProof = writable<WalletError>({});
+
+export const displayInsufficientBalance = writable<WalletError>(null);
+export const displayWrongDifficulty = writable<WalletError>(null);
+export const displayTooManyProofs = writable<WalletError>(null);
+export const displayDiscontinuity = writable<WalletError>(null);
+export const displayInvalidProof = writable<WalletError>(null);
 
 export const clearDisplayErrors = () => {
-  displayWrongDifficulty.set({});
-  displayTooManyProofs.set({});
-  displayDiscontinuity.set({});
-  displayInvalidProof.set({});
-  displayInsufficientBalance.set({});
+  displayWrongDifficulty.set(null);
+  displayTooManyProofs.set(null);
+  displayDiscontinuity.set(null);
+  displayInvalidProof.set(null);
+  displayInsufficientBalance.set(null);
 }
 

@@ -10,7 +10,7 @@
   import { _ } from "svelte-i18n";
 
   // default playlist which is provided in TauriWallet.
-  let playlist_json_url = "https://raw.githubusercontent.com/bicho-labs/anima/seed_peers/main/fullnode_seed_playlist.json";
+  let playlist_json_url = "https://raw.githubusercontent.com/metazoa-labs/anima/seed_peers/main/fullnode_seed_playlist.json";
 
   function updateNetwork() {
     // check input data

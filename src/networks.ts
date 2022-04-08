@@ -7,7 +7,7 @@ import { loadAccounts } from "./accountActions";
   // Note: the string initialized should match the enum in Rust, networks.rs, to easily de/serialize
 export enum Networks {
   Mainnet = "Mainnet",
-  Rex = "Rex"
+  Testnet = "Testnet"
 }
 
 export const network_profile = writable<NetworkProfile>({

@@ -10,7 +10,6 @@ use crate::key_manager;
 
 static APP_CONFIG_FILE: &str = "tauriWallet.toml";
 static ACCOUNTS_DB_FILE: &str = "accounts.json";
-static ACCOUNTS_DB_FILE_REX: &str = "accounts-rex.json";
 
 // get the config path for files
 pub fn default_config_path() -> PathBuf {
@@ -26,14 +25,7 @@ pub fn get_cfg() -> Result<AppCfg, Error> {
 }
 
 pub fn default_accounts_db_path() -> PathBuf {
-  let db_file = match get_cfg() {
-    Ok(cfg) => match cfg.chain_info.chain_id.as_str() {
-      "Rex" => ACCOUNTS_DB_FILE_REX,
-      _ => ACCOUNTS_DB_FILE,
-    },
-    Err(_) => ACCOUNTS_DB_FILE,
-  };
-  dirs::home_dir().unwrap().join(".tauriWallet").join(db_file)
+  dirs::home_dir().unwrap().join(".tauriWallet").join(ACCOUNTS_DB_FILE)
 }
 
 /// All the parameters needed for a client transaction.

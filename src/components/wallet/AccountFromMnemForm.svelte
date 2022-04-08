@@ -1,13 +1,12 @@
 <script lang="ts">
   import { _ } from "svelte-i18n";
-
   import AccountFromMnemSubmit from "./AccountFromMnemSubmit.svelte";
   
   let danger_temp_mnem: string;
 </script>
 
 <main>  
-  <h3 class="  uk-text-uppercase">
+  <h3 class="uk-text-light uk-text-muted uk-text-uppercase">
     {$_("wallet.account_from_mnem_from.title")}</h3>
   <p> {$_("wallet.account_from_mnem_from.description")}</p>
   <form id="account-form">
@@ -24,9 +23,4 @@
       <AccountFromMnemSubmit danger_temp_mnem={danger_temp_mnem} isNewAccount={false} />
     </fieldset>
   </form>
-
-  <div>
-
-  </div>
-
 </main>

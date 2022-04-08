@@ -19,7 +19,6 @@
   import { getVersion } from "./version";
   import { walletTick } from "./tick";
   import { init_preferences } from "./preferences";
-  import { initTitleBar } from "./windowTitle";
   
   init_preferences();
 
@@ -28,8 +27,6 @@
 
   onMount(async () => {
 
-    initTitleBar();
-    
     isWalletInit();
 
     getEnv();
@@ -48,11 +45,11 @@
   })
 </script>
 
-<main class="uk-height-viewport gradient uk-light">
+<main class="uk-background-muted uk-height-viewport">
   <div class="uk-container">
     <Router>
       <Nav />
-      <div class="uk-margin-large">
+      <div class="uk-background-muted uk-margin-large">
         <Route path={routes.home} component={Wallet} primary={false} />
         <Route
           path={routes.accountFromMnem}

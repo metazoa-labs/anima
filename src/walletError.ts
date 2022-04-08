@@ -17,7 +17,7 @@ export enum ErrMap {
   InvalidProof = 130110,
 }
 // let list_errors: WalletError;
-export const walletErrorLog = writable <[WalletError]>([]);
+export const walletErrorLog = writable<[WalletError]>();
 
 export function raise_error(err: WalletError, quiet: boolean = false, caller: string) {
   let hasCustomErrorDisplay = false;
@@ -44,7 +44,7 @@ export function raise_error(err: WalletError, quiet: boolean = false, caller: st
 
 
 export function clearErrors() {
-  walletErrorLog.set([]);
+  walletErrorLog.set([]); // TODO: Assign this to empty array without causing TS error.
 }
 
 // returns true if there is a UI for the error, so we know to display generic error notification.
