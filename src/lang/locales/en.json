@@ -36,7 +36,7 @@
       "offline": "offline",
       "loading": "loading",
       "account_on_chain": "Account Not On Chain",
-      "message": " Your balance will go down for every transaction you send, including mining."
+      "message": " Your balance will go down for every transaction you send."
     },
     "keygen": {
       "title": "Add Account to Wallet",
