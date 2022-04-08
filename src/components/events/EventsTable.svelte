@@ -1,15 +1,15 @@
 <script lang="ts">
   /* Account events table with pagination */
-  import { get_locale } from "../../accountActions";
   import PageNumber from "./PageNumber.svelte";
   import { _ } from "svelte-i18n";
+  import { printCoins } from "../../coinHelpers";
 
   export let events;
   
   const maxPageSize = 5;
   const eventTypesDic = {
-    receivedpayment: $_("events.received_payment"),
-    sentpayment: $_("events.sent_payment")
+    receivedpayment: "Received",
+    sentpayment: "Sent"
   }
 
   $: pages = splitPages(events, maxPageSize);  
@@ -39,19 +39,16 @@
   }
 
   // TODO: move to tauri commands
-  function formatAmount(balance) {
-    const balanceScaled = balance / 1000000;
-
-    return balanceScaled.toLocaleString(get_locale(), {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-
   function formatEventType(type) {
     const value = eventTypesDic[type];
     return value || type;
   }
+
+  // this is for mockup only
+  function formatActor(address) {
+    return address.substring(0, 16);
+  }
+
 </script>
 
 <main class="uk-height-viewport">
@@ -71,9 +68,9 @@
         <tr>
           <td class="uk-text-right">{event.transaction_version}</td>
           <td class="uk-text-center">{formatEventType(event.data.e_type)}</td>
-          <td class="uk-text-right">{formatAmount(event.data.amount.amount)}</td>
-          <td class="uk-text-center">{event.data.sender}</td>
-          <td class="uk-text-center">{event.data.receiver}</td>
+          <td class="uk-text-right">{printCoins(event.data.amount.amount)}</td>
+          <td class="uk-text-center">{formatActor(event.data.sender)}</td>
+          <td class="uk-text-center">{formatActor(event.data.receiver)}</td>
         </tr>
       {/each}
     </tbody>
@@ -171,6 +168,8 @@
     background-color: #F0F0F0;
   }
   .previous-page-btn {
+    display: flex;
+    justify-content: center;
     width: 20px; 
     height: 20px; 
     border-radius: 100%; 
@@ -182,6 +181,8 @@
   }
 
   .next-page-btn {
+    display: flex;
+    justify-content: center;
     width: 20px; 
     height: 20px; 
     border-radius: 100%; 
@@ -196,5 +197,6 @@
     height: 20px; 
     padding: 5px; 
     margin: 0px;
+    line-height: 20px !important;
   }
 </style>

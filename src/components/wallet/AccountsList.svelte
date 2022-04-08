@@ -4,23 +4,20 @@
   import UIkit from "uikit";
   import Icons from "uikit/dist/js/uikit-icons";
   import AccountCard from "./AccountCard.svelte";
-
   UIkit.use(Icons);
 
-  // export let my_account: AccountEntry;
-  export let account_list: AccountEntry[];
-  // export let isConnected: boolean;
-
+  export let list: AccountEntry[];
+  
 </script>
 
 <main class="uk-margin">
-  {#if account_list == null}
+  {#if list == null}
     <span uk-spinner />
-  {:else if account_list.length > 0}
+  {:else if list.length > 0}
     <div class="uk-child-width-expand@s" uk-grid>
-    {#each account_list as a, i}
-      <AccountCard account={a.account} balance={a.balance}/>
-    {/each}
+      {#each list as a}
+        <AccountCard account={a.account} balance={a.balance}/>
+      {/each}
     </div>
   {/if}
 </main>

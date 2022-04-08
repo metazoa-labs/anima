@@ -1,5 +1,6 @@
 export const routes = {
   home: '/',
+  account: '/account',
   addAccount: '/add-account',
   accountFromMnem: '/account-from-mnem',
   keygen: '/keygen',

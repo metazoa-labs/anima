@@ -4,6 +4,7 @@
   import Nav from "./components/Nav.svelte";
   import DebugCard from "./components/dev/DebugCard.svelte";
   import Wallet from "./components/wallet/Wallet.svelte";
+  import Account from "./components/account/Account.svelte";
   import Settings from "./components/settings/Settings.svelte";
   import DevMode from "./components/dev/DevMode.svelte";
   import AccountFromMnemForm from "./components/wallet/AccountFromMnemForm.svelte";
@@ -27,25 +28,18 @@
   let debug = false;
 
   onMount(async () => {
-
-    initTitleBar();
-    
+    initTitleBar();   
     isWalletInit();
-
     getEnv();
-
     getVersion();
-
     walletTick();
     healthTick = setInterval(walletTick, 30000); // do a healthcheck, this is async
-
     debugMode.subscribe(b => debug = b);
   });
 
   onDestroy(() => {
     clearInterval(healthTick);
-  })
-
+  });
 
 </script>
 
@@ -55,6 +49,7 @@
       <Nav />
       <div class="uk-margin-large">
         <Route path={routes.home} component={Wallet} primary={false} />
+        <Route path={routes.account} component={Account} primary={false} />
         <Route
           path={routes.accountFromMnem}
           component={AccountFromMnemForm}
@@ -65,6 +60,7 @@
         <Route path={routes.events} component={Events} primary={false} />
         <Route path={routes.settings} component={Settings} primary={false} />
         <Route path={routes.about} component={About} primary={false} />
+        
 
         <!-- DEV -->
         <Route path={routes.developer} component={DevMode} primary={false} />

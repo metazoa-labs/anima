@@ -21,7 +21,7 @@
   UIkit.use(Icons);
 
   let my_account: AccountEntry;
-  let account_list: AccountEntry[] = null;
+  let accountList: AccountEntry[] = null;
   let pendingAccounts: AccountEntry[] = [];
   let isRefreshing: boolean = true;
   let isConnected: boolean = true;
@@ -36,7 +36,7 @@
   onMount(async () => {
     unsubsConnected = connected.subscribe(b => isConnected = b);
     unsubsAll_accounts = all_accounts.subscribe(all => {
-      account_list = all;
+      accountList = all;
       pendingAccounts = all.filter(x => !x.on_chain);
     });
     unsubsSigningAccount = signingAccount.subscribe(a => my_account = a);
@@ -63,36 +63,23 @@
 
     {#if !isLoaded}
       <AccountsListSkeleton />
-    {:else if account_list.length > 0}
-
+    {:else if accountList.length > 0}
       {#if !isConnected}
         <ConnectionError />
       {:else}
-        <!-- <div class="uk-flex uk-flex-center">
-          <h2 class="uk-text-light uk-text-muted uk-text-uppercase">{$_("wallet.wallet")}</h2>
-        </div> -->
-
-      <div uk-grid class="uk-margin uk-flex uk-flex-center">
-        <img src="/anima-logo-white.svg" alt="drawing" width="200" style="opacity: 0.5"/>
-
-      </div>
-        
-        <AccountsList  {account_list} />
-
+        <div uk-grid class="uk-margin uk-flex uk-flex-center">
+          <img src="/anima-logo-white.svg" alt="drawing" width="200" style="opacity: 0.5"/>
+        </div>       
+        <AccountsList list={accountList} />
         <ReminderCreate {pendingAccounts} {isConnected} />
 
         <div uk-grid class="uk-margin uk-flex uk-flex-center">
           <Link to={routes.keygen}>
-            <!-- <button class="uk-button uk-button-secondary">{$_("wallet.btn_new_account")}</button> -->
             <span uk-icon="icon: plus-circle; ratio: 2"></span>
-
           </Link>
-          <!-- <Link to={routes.accountFromMnem}>
-            <button class="uk-button uk-button-default">{$_("wallet.btn_restore_account")} </button>
-          </Link> -->
         </div>
       {/if}
-    {:else if account_list.length == 0 && !isRefreshing}
+    {:else if accountList.length == 0 && !isRefreshing}
       <Newbie />
     {/if}
   </div>
