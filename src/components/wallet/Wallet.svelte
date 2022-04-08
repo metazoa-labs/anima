@@ -71,11 +71,16 @@
         <!-- <div class="uk-flex uk-flex-center">
           <h2 class="uk-text-light uk-text-muted uk-text-uppercase">{$_("wallet.wallet")}</h2>
         </div> -->
+
+      <div uk-grid class="uk-margin uk-flex uk-flex-center">
+        <img src="/anima-logo-white.svg" alt="drawing" width="200" style="opacity: 0.5"/>
+
+      </div>
         
-        <AccountsList {my_account} {account_list} {isConnected} />
+        <AccountsList  {account_list} />
 
         <ReminderCreate {pendingAccounts} {isConnected} />
-        
+
         <div uk-grid class="uk-margin uk-flex uk-flex-center">
           <Link to={routes.keygen}>
             <!-- <button class="uk-button uk-button-secondary">{$_("wallet.btn_new_account")}</button> -->
