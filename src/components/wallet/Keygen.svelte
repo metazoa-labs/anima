@@ -56,7 +56,7 @@
 
   {#if address && !hide}
 
-    <div class="uk-margin uk-card uk-card-default uk-card-body uk-text-muted">
+    <div class="uk-margin uk-card uk-card-body">
       <h5 class="uk-text-muted uk-text-uppercase">{$_("wallet.keygen.account_address")}</h5>
       <p class="uk-text-emphasis uk-text-uppercase">{address}</p>
       <h5 class="uk-text-muted uk-text-uppercase">{$_("wallet.keygen.onboard_key")}</h5>
