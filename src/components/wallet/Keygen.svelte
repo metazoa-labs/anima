@@ -1,12 +1,12 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { _ } from "svelte-i18n";
+  import { onDestroy, onMount } from "svelte";
   import { invoke } from "@tauri-apps/api/tauri";
   import { signingAccount, mnem } from "../../accounts";
   import type { AccountEntry } from "../../accounts";
   import { raise_error } from "../../walletError";
   import { responses } from "../../debug";
   import AccountFromMnemSubmit from "./AccountFromMnemSubmit.svelte";
-  import { _ } from "svelte-i18n";
 
   interface NewKeygen {
     entry: AccountEntry;
@@ -17,12 +17,20 @@
   let address: string;
   let authkey: string;
 
+  let unsubsMnem;
+  let unsubsSigningAccount;
+
   onMount(async () => {
-    mnem.subscribe((m) => (display_mnem = m));
-    signingAccount.subscribe((a) => {
+    unsubsMnem = mnem.subscribe((m) => (display_mnem = m));
+    unsubsSigningAccount = signingAccount.subscribe((a) => {
       address = a.account;
       authkey = a.authkey;
     });
+  });
+
+  onDestroy(async () => {
+    unsubsMnem && unsubsMnem();
+    unsubsSigningAccount && unsubsSigningAccount();
   });
 
   let hide = true;
@@ -41,23 +49,21 @@
 
 <main>
   <div class="uk-flex uk-flex-center">
-    <h3 class="  uk-text-uppercase">
+    <h3 class="uk-text-light uk-text-muted uk-text-uppercase">
       {$_("wallet.keygen.title")}
     </h3>
   </div>
 
-
-
   {#if address && !hide}
 
-    <div class="uk-margin uk-card uk-card-default uk-card-body ">
-      <h5 class=" uk-text-uppercase">{$_("wallet.keygen.account_address")}</h5>
+    <div class="uk-margin uk-card uk-card-default uk-card-body uk-text-muted">
+      <h5 class="uk-text-muted uk-text-uppercase">{$_("wallet.keygen.account_address")}</h5>
       <p class="uk-text-emphasis uk-text-uppercase">{address}</p>
-      <h5 class=" uk-text-uppercase">{$_("wallet.keygen.onboard_key")}</h5>
+      <h5 class="uk-text-muted uk-text-uppercase">{$_("wallet.keygen.onboard_key")}</h5>
       <p class="uk-text-emphasis uk-text-uppercase">{authkey}</p>
       <p>{$_("wallet.keygen.onboard_key_description")}</p>
 
-      <h5 class=" uk-text-uppercase uk-text-danger">
+      <h5 class="uk-text-muted uk-text-uppercase uk-text-danger">
         {$_("wallet.keygen.securite_recovery_phrase")}
       </h5>
       <p class="uk-text-danger">
@@ -88,14 +94,14 @@
   {:else}
 
     <div class="uk-flex uk-flex-center">
-      <h3 class="  uk-text-center">
+      <h3 class="uk-text-light uk-text-muted uk-text-center">
         {$_("wallet.keygen.description")}
       </h3>
     </div>
 
     <div class="uk-position-center">
       <button
-        class="uk-button uk-button-primary uk-align-right"
+        class="uk-button uk-button-secondary uk-align-right"
         on:click={keygen}
       >
       {$_("wallet.keygen.btn_generate_keys")}

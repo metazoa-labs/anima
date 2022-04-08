@@ -1,29 +1,18 @@
 <script lang="ts">
-  import { get_locale, setAccount } from "../../accountActions";
+  import { _ } from "svelte-i18n";
+  import { setAccount } from "../../accountActions";
   import type { AccountEntry } from "../../accounts";
   import UIkit from "uikit";
   import Icons from "uikit/dist/js/uikit-icons";
-  import { _ } from "svelte-i18n";
+  import { printCoins, unscaledCoins } from "../../coinHelpers";  
 
   UIkit.use(Icons);
 
   export let my_account: AccountEntry;
   export let account_list: AccountEntry[];
+  export let isMining: boolean;
   export let isConnected: boolean;
 
-  // TODO: move to tauri commands
-  function formatBalance(balance) {
-    const balanceScaled = coinsScaled(balance);
-
-    return balanceScaled.toLocaleString(get_locale(), {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    });
-  }
-
-  function coinsScaled(coins) {
-    return coins / 1000000;
-  }
 </script>
 
 <main>
@@ -44,7 +33,7 @@
         {#each account_list as a, i}
           <!-- svelte-ignore missing-declaration -->
           <tr
-            class={a.account == my_account.account
+            class={isMining && a.account == my_account.account
               ? "uk-text-primary"
               : ""}
             on:click={() => setAccount(a.account)}
@@ -56,7 +45,7 @@
               {/if}
             </td>
             <td>{a.nickname}</td>
-            <td class="uk-text-truncate">{a.account}</td>
+            <td>{a.account}</td>
             <td>{a.authkey.slice(0, 5)}...</td>
             <td class="uk-text-right">
               {#if !a.on_chain}
@@ -64,7 +53,7 @@
               {:else if a.on_chain}
                 <div class="uk-inline">
                   
-                  {#if coinsScaled(a.balance) < 1}
+                  {#if unscaledCoins(a.balance) < 1}
                     <!-- TODO: make this icon align verical middle. -->
                     <span
                       class="uk-margin uk-text-warning"
@@ -75,7 +64,7 @@
                     </div>
                   {/if}
 
-                  {formatBalance(a.balance)}
+                  {printCoins(a.balance)}
                 </div>
               {:else if a.balance == null}
                 {$_("wallet.account_list.loading")}...

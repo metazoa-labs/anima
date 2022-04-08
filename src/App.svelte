@@ -11,6 +11,7 @@
   import Transactions from "./components/txs/Transactions.svelte";
   import Events from "./components/events/Events.svelte";
   import About from "./components/about/About.svelte";
+
   import { getEnv, debugMode } from "./debug";
   import { routes } from "./routes";
   import "uikit/dist/css/uikit.min.css";
@@ -19,20 +20,8 @@
   import { walletTick } from "./tick";
   import { init_preferences } from "./preferences";
   
-
-  import { appWindow } from '@tauri-apps/api/window'
-document
-  .getElementById('titlebar-minimize')
-  .addEventListener('click', () => appWindow.minimize())
-document
-  .getElementById('titlebar-maximize')
-  .addEventListener('click', () => appWindow.toggleMaximize())
-document
-  .getElementById('titlebar-close')
-  .addEventListener('click', () => appWindow.close())
-  
   init_preferences();
- 
+
   let healthTick;
   let debug = false;
 
@@ -48,6 +37,7 @@ document
     healthTick = setInterval(walletTick, 30000); // do a healthcheck, this is async
 
     debugMode.subscribe(b => debug = b);
+    
   });
 
   onDestroy(() => {
@@ -55,11 +45,11 @@ document
   })
 </script>
 
-<main class="uk-height-viewport gradient uk-light">
+<main class="uk-background-muted uk-height-viewport">
   <div class="uk-container">
     <Router>
       <Nav />
-      <div class="uk-margin-large">
+      <div class="uk-background-muted uk-margin-large">
         <Route path={routes.home} component={Wallet} primary={false} />
         <Route
           path={routes.accountFromMnem}
@@ -79,8 +69,6 @@ document
         {#if debug }
           <DebugCard/>
         {/if}
-
-
       </div>
     </Router>
   </div>  

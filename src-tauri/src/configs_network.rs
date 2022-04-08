@@ -93,18 +93,14 @@ pub fn set_network_configs(network: Networks) -> Result<NetworkProfile, WalletEr
 }
 
 pub fn set_waypoint_from_upstream() -> Result<AppCfg, Error> {
-  let cfg = configs::get_cfg()?;
 
   // try getting waypoint from upstream nodes
   // no waypoint is necessary in advance.
 
   //////////////////////////////
-  // NOTE: use do a request here.
-  let wp: Option<String> = Some("0".to_string());
+  // NOTE:  do a request here.
+  let cfg = set_waypoint("0".to_string())?;
   /////////////////////
-  if let Some(w) = wp {
-    set_waypoint(w)?;
-  }
 
   Ok(cfg)
 }

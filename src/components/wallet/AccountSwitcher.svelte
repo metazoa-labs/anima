@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { signingAccount, all_accounts } from "../../accounts";
   import { setAccount } from "../../accountActions";
   import type { AccountEntry } from "../../accounts";
@@ -11,16 +11,24 @@
   let my_account: AccountEntry;
   let account_list: AccountEntry[];
 
+  let unsubsSigningAccount;
+  let unsubsAll_accounts;
+
   onMount(async () => {
-    signingAccount.subscribe(value => my_account = value);
-    all_accounts.subscribe(all => account_list = all);
+    unsubsSigningAccount = signingAccount.subscribe(value => my_account = value);
+    unsubsAll_accounts = all_accounts.subscribe(all => account_list = all);
+  });
+
+  onDestroy(() => {
+    unsubsSigningAccount && unsubsSigningAccount();
+    unsubsAll_accounts && unsubsAll_accounts();
   });
 
 </script>
 
 <main>
   <div>
-    <div class="">
+    <button class="uk-button uk-button-default" type="button">
       <NetworkIcon /> 
       {#if account_list && account_list.length > 0}
         <span class="uk-margin-small-left">
@@ -31,12 +39,12 @@
           {/if}
         </span>
       {/if}
-      </div>
+    </button>
 
     <div uk-dropdown>
       <ul class="uk-nav uk-dropdown-nav">
         {#if account_list && account_list.length > 0}
-          <li class="">
+          <li class="uk-text-muted">
             {$_("wallet.account_switcher.switch_account")}</li>
           <li class="uk-nav-divider" />
           {#if !account_list} <!-- TODO: move up --> 
@@ -58,15 +66,15 @@
         {/if}
         <li>
           <a href={"#"}>
-            <Link to="settings" class="">
+            <Link to="settings" class="uk-text-muted">
               {$_("wallet.account_switcher.setting")}</Link></a>
         </li>
         <li>
           <a href={"#"}>
-            <Link to="dev" class="">
+            <Link to="dev" class="uk-text-muted">
               {$_("wallet.account_switcher.developers")}</Link></a>
         </li>
-        <li class="">
+        <li class="uk-text-muted">
           <AboutLink />
         </li>
       </ul>
