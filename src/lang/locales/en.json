@@ -39,11 +39,11 @@
       "message": " Your balance will go down for every transaction you send, including mining."
     },
     "keygen": {
-      "title": "Create New Account",
+      "title": "Add Account to Wallet",
       "description": "After you generate an account and secret phrase, you'll need someone to send one   coin to that account for it to be created on chain.",
       "btn_generate_keys": "Generate Keys",
       "btn_generate_keys_2": "Generate Different Keys",
-      "btn_create_account": "Create This Account",
+      "btn_create_account": "Add this Account",
       "account_address": "Account Address",
       "onboard_key": "Onboarding Key",
       "onboard_key_description": "This is also known as an Auth Key. For now you'll need it to be able to create the account on chain.",
@@ -66,7 +66,7 @@
     "account_switcher": {
       "select_account": "Select Account",
       "switch_account": "Switch Account",
-      "setting": "Go To Setting",
+      "setting": "Go To Settings",
       "developers": "Developers"
     }
   },

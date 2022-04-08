@@ -76,7 +76,7 @@
 
   {#if isNewAccount}
     <button
-      class="uk-button uk-button-secondary uk-margin-small-right"
+      class="uk-button uk-button-primary uk-margin-small-right"
       disabled={isSubmitting}
       type="button"
       on:click|preventDefault={openConfirmationModal}
