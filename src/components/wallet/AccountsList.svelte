@@ -10,7 +10,6 @@
 
   export let my_account: AccountEntry;
   export let account_list: AccountEntry[];
-  export let isMining: boolean;
   export let isConnected: boolean;
 
 </script>
@@ -33,12 +32,11 @@
         {#each account_list as a, i}
           <!-- svelte-ignore missing-declaration -->
           <tr
-            class={isMining && a.account == my_account.account
+            class={a.account == my_account.account
               ? "uk-text-primary"
               : ""}
             on:click={() => setAccount(a.account)}
           >
-            <!-- <a href="#" on:click={() => { setAccount(acc.account); }}> {acc.nickname} </a > -->
             <td>
               {#if a.account == my_account.account}
                   <span uk-icon="user" />

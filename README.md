@@ -16,6 +16,7 @@ This is a skeleton for building wallets it comes with certain features out of th
 - [x] Scaffold for signing transactions in memory-safe Rust environment.
 - [x] Account profile creation an saving to disk.
 - [x] Multi-account by default.
+- [x] Internationalized starting with `en` and `zh_cn`.
 - [x] Set "playlists" of fullnode peers to connect to. 
 - [x] Developer debugging view.
 ## Development

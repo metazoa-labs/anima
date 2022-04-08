@@ -23,7 +23,6 @@
   let my_account: AccountEntry;
   let account_list: AccountEntry[] = null;
   let pendingAccounts: AccountEntry[] = [];
-  let isMining = false;
   let isRefreshing: boolean = true;
   let isConnected: boolean = true;
   let isLoaded: boolean = false;
@@ -32,7 +31,6 @@
   let unsubsAll_accounts;
   let unsubsSigningAccount;
   let unsubsIsAccountsLoaded;
-  let unsubsMinerLoopEnabled;
   let unsubsIsRefreshingAccounts;
 
   onMount(async () => {
@@ -74,7 +72,7 @@
           <h2 class="uk-text-light uk-text-muted uk-text-uppercase">{$_("wallet.wallet")}</h2>
         </div>
         
-        <AccountsList {my_account} {account_list} {isMining} {isConnected} />
+        <AccountsList {my_account} {account_list} {isConnected} />
 
         <ReminderCreate {pendingAccounts} {isConnected} />
 

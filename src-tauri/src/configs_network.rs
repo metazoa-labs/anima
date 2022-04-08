@@ -11,7 +11,7 @@ use crate::{
   wallet_error::WalletError,
 };
 
-static DEFAULT_GIT: &str = "https://raw.githubusercontent.com/bicho-labs/tauri-wallet/seed-peers";
+static DEFAULT_GIT: &str = "https://raw.githubusercontent.com/metazoa-labs/tauri-wallet/seed-peers";
 
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
 pub struct NetworkProfile {
