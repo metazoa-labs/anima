@@ -99,16 +99,7 @@ pub fn set_waypoint_from_upstream() -> Result<AppCfg, Error> {
 
   //////////////////////////////
   // NOTE:  do a request here.
-  let cfg = match set_waypoint("0".to_string()) {
-    Ok(a) => {
-      dbg!(&a);
-      a
-    },
-    Err(e) => { 
-      dbg!(&e);
-      bail!(e);
-    },
-};
+  let cfg = set_waypoint("0".to_string())?;
   /////////////////////
 
   Ok(cfg)

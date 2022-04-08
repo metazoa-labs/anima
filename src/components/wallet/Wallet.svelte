@@ -68,21 +68,23 @@
       {#if !isConnected}
         <ConnectionError />
       {:else}
-        <div class="uk-flex uk-flex-center">
+        <!-- <div class="uk-flex uk-flex-center">
           <h2 class="uk-text-light uk-text-muted uk-text-uppercase">{$_("wallet.wallet")}</h2>
-        </div>
+        </div> -->
         
         <AccountsList {my_account} {account_list} {isConnected} />
 
         <ReminderCreate {pendingAccounts} {isConnected} />
-
-        <div uk-grid class="uk-flex uk-flex-center">
+        
+        <div uk-grid class="uk-margin uk-flex uk-flex-center">
           <Link to={routes.keygen}>
-            <button class="uk-button uk-button-secondary">{$_("wallet.btn_new_account")}</button>
+            <!-- <button class="uk-button uk-button-secondary">{$_("wallet.btn_new_account")}</button> -->
+            <span uk-icon="icon: plus-circle; ratio: 2"></span>
+
           </Link>
-          <Link to={routes.accountFromMnem}>
+          <!-- <Link to={routes.accountFromMnem}>
             <button class="uk-button uk-button-default">{$_("wallet.btn_restore_account")} </button>
-          </Link>
+          </Link> -->
         </div>
       {/if}
     {:else if account_list.length == 0 && !isRefreshing}
