@@ -60,7 +60,6 @@ pub fn get_events(_account: String) -> Result<Vec<EventView>, WalletError> {
 pub async fn get_root_account() -> Result<Vec<MoveResource>, String> {
   match queries::get_association_state().await {
     Ok(r) => {
-      dbg!("query success");
       Ok(r)
     },
     Err(e) => Err(e.to_string()),

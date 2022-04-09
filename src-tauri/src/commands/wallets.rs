@@ -18,13 +18,13 @@ pub fn keygen() -> Result<NewKeygen, WalletError> {
   keys::new_random()
 }
 
-/// default way accounts get initialized in anima_canary
+/// check if the wallet is initialized
 #[tauri::command(async)]
 pub fn is_init() -> Result<bool, WalletError> {
   Ok(configs::is_initialized())
 }
 
-/// default way accounts get initialized in anima_canary
+/// interface for initializing accounts from a mnemonci
 #[tauri::command]
 pub fn init_from_mnem(mnem: String) -> Result<AccountEntry, WalletError> {
   keys::danger_init_from_mnem(mnem)
@@ -81,7 +81,6 @@ pub fn add_account(
   address: AccountAddress,
 ) -> Result<Accounts, WalletError> {
 
-  dbg!("add account");
   let mut entry = AccountEntry::new(address, authkey);
   entry.nickname = nickname;
 
@@ -114,7 +113,7 @@ pub fn remove_accounts() -> Result<String, WalletError> {
   // Note: this only removes the account tracking, doesn't delete account on chain.
 
   let db_path = default_accounts_db_path();
-  dbg!(&db_path);
+
   if db_path.exists() {
     match fs::remove_file(&db_path) {
       Ok(_) => return Ok("removed all accounts".to_owned()),

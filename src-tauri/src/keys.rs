@@ -82,7 +82,7 @@ pub fn new_random() -> Result<NewKeygen, WalletError> {
 
 
 pub fn danger_init_from_mnem(mnem: String) -> Result<AccountEntry, WalletError> {
-  dbg!("init from mnem");
+  println!("init from mnem");
   // Generate random Mnemonic using the default language (English)
   let mnemonic = Mnemonic::new(mnem, Default::default())
   .map_err(|_|{ WalletError::misc("cannot derive keys from mnemonic")})?;
@@ -107,7 +107,7 @@ pub fn danger_init_from_mnem(mnem: String) -> Result<AccountEntry, WalletError> 
 
   // switches profile andcreates the .toml file if not yet created
   set_account_profile(&account, authkey)?;
-
+  
   // set the key in OS keyring
   set_private_key(&account, pair.0)
    .map_err(|_|{ WalletError::config("could not save to OS keyring")})?;
@@ -119,7 +119,6 @@ pub fn danger_init_from_mnem(mnem: String) -> Result<AccountEntry, WalletError> 
 pub fn insert_account_db(
   new_account: AccountEntry
 ) -> Result<Accounts, Error> {
-  dbg!("insert_account_db");
   let app_dir = default_accounts_db_path();
   // get all accounts
   let mut all = read_accounts()?;
@@ -137,6 +136,8 @@ pub fn insert_account_db(
       .write_all(&serialized)
       .expect("DB_FILE should be writen!");
 
+    println!("account inserted in to db");
+
     Ok(all)
   } else {
     bail!("account already exists")
@@ -150,10 +151,10 @@ pub fn update_accounts_db(accounts: &Accounts) -> Result<(), WalletError> {
     .map_err(|e| WalletError::config(&format!("json account db should serialize, {:?}", &e)))?;
 
   File::create(app_dir)
-    .map_err(|e| WalletError::config(&format!("anima_canary DB_FILE should be created!, {:?}", &e)))?
+    .map_err(|e| WalletError::config(&format!("wallet DB_FILE should be created!, {:?}", &e)))?
     .write_all(&serialized)
     .map_err(|e| {
-      WalletError::config(&format!("anima_canary DB_FILE should be written!, {:?}", &e))
+      WalletError::config(&format!("wallet DB_FILE should be written!, {:?}", &e))
     })?;
   Ok(())
 }

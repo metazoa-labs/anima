@@ -2,14 +2,15 @@
 
 use crate::app_cfg::AppCfg;
 use crate::configs::{self};
-use anyhow::Error;
+use crate::configs_network::{NetworkID, set_network_configs};
+use crate::wallet_error::WalletError;
 use aptos_types::transaction::authenticator::AuthenticationKey;
 use move_core_types::account_address::AccountAddress;
 use std::fs;
 
 /// For switching between profiles in the Account DB.
 // NOTE: account and authkey are placeholders!
-pub fn set_account_profile(account: &AccountAddress, authkey: AuthenticationKey) -> Result<AppCfg, Error> {
+pub fn set_account_profile(account: &AccountAddress, authkey: AuthenticationKey) -> Result<AppCfg, WalletError> {
   let mut cfg = match configs::is_initialized() {
     true => configs::get_cfg()?,
     false => AppCfg::default(),
@@ -21,11 +22,15 @@ pub fn set_account_profile(account: &AccountAddress, authkey: AuthenticationKey)
   cfg.profile.auth_key = authkey;
 
   if !cfg.workspace.node_home.exists() {
-    fs::create_dir_all(&cfg.workspace.node_home)?;
+    fs::create_dir_all(&cfg.workspace.node_home)
+    .map_err(|_| WalletError::config("can't create directory"))?;
   }
 
-  println!("set_account_profile");
-
   cfg.save_file()?;
+  // TODO: this is for Canary profile. Make switch to Devnet when appropriate.
+  set_network_configs(NetworkID::Devnet)?;
+
+  println!("account profile saved");
+
   Ok(cfg)
 }

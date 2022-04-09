@@ -1,3 +1,4 @@
+use crate::app_cfg::APP_HOME;
 use crate::wallet_error::WalletError;
 use anyhow::Error;
 use std::env;
@@ -45,7 +46,7 @@ fn read_preferences() -> Result<Preferences, Error> {
 fn preferences_db_path() -> PathBuf {
   dirs::home_dir()
     .unwrap()
-    .join(".anima_canary")
+    .join(APP_HOME)
     .join(PREFERENCES_DB_FILE)
 }
 
@@ -57,14 +58,14 @@ fn update_preferences(preferences: &Preferences) -> Result<(), WalletError> {
   File::create(db_path)
     .map_err(|e| {
       WalletError::config(&format!(
-        "anima_canary preferences_db_file should be created!, {:?}",
+        "app preferences_db_file should be created!, {:?}",
         &e
       ))
     })?
     .write_all(&serialized)
     .map_err(|e| {
       WalletError::config(&format!(
-        "anima_canary preferences_db_file should be written!, {:?}",
+        "app preferences_db_file should be written!, {:?}",
         &e
       ))
     })?;

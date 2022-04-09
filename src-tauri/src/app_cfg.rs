@@ -16,8 +16,8 @@ use std::{
 use crate::configs_network::NetworkID;
 
 
-static APP_HOME: &str = ".anima_canary";
-static CONFIG_FILE: &str = "anima_canary.toml";
+pub static APP_HOME: &str = ".anima_canary";
+pub static CONFIG_FILE: &str = "anima_canary.toml";
 
 /// App Configuration
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -36,11 +36,9 @@ fn default_path() -> PathBuf {
 /// Get a AppCfg object from toml file
 pub fn parse_toml(path: Option<PathBuf>) -> Result<AppCfg, Error> {
   let cfg_path = path.unwrap_or(default_path());
-
   let mut toml_buf = "".to_string();
   let mut file = File::open(&cfg_path)?;
   file.read_to_string(&mut toml_buf)?;
-
   let cfg: AppCfg = toml::from_str(&toml_buf)?;
   Ok(cfg)
 }

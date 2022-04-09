@@ -33,7 +33,6 @@ pub struct HostInfo {
 
 pub fn make_url(git_path: &str, filename: &str) -> Result<Url, Error> {
   let f = format!("{}/{}.json", git_path, filename);
-  dbg!(&f);
   Ok(f.parse()?)
 }
 

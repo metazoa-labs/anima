@@ -51,7 +51,6 @@ impl fmt::Display for NetworkID {
 }
 
 pub fn set_network_configs(network: NetworkID) -> Result<NetworkProfile, WalletError> {
-  dbg!("toggle network", &network);
   let playlist = match &network {
     NetworkID::Testnet => FullnodePlaylist::http_fetch_playlist(rpc_playlist::make_url(
       DEFAULT_GIT,
@@ -79,7 +78,7 @@ pub fn set_network_configs(network: NetworkID) -> Result<NetworkProfile, WalletE
     )?)?,
   };
 
-  playlist.update_config_file(None)?; // None uses default path of anima_canary.toml
+  playlist.update_config_file(None)?; // none uses default path.
 
   // TODO: I don't think chain ID needs to change.
   set_chain_id(network).map_err(|e| {
@@ -87,7 +86,10 @@ pub fn set_network_configs(network: NetworkID) -> Result<NetworkProfile, WalletE
     WalletError::misc(&err_msg)
   })?;
 
+
   set_waypoint_from_upstream()?;
+
+  println!("network configs set");
 
   NetworkProfile::new()
 }
@@ -115,9 +117,9 @@ pub fn set_waypoint(wp: String) -> Result<AppCfg, Error> {
   Ok(cfg)
 }
 
-/// Get all the anima_canary configs. For tx sending and upstream nodes
-/// Note: The default_node key in anima_canary is not used by anima_canary. anima_canary randomly tests
-/// all the endpoints in upstream_peers on every TX.
+/// Get all the app configs. For tx sending and upstream nodes
+/// NOTE: the app randomized list of all the endpoints in upstream_peers on every TX.
+// TODO: endpoints need to be TESTED to check for ledger info once selected.
 pub fn override_upstream_node(url: Url) -> Result<AppCfg, Error> {
   let mut cfg = configs::get_cfg()?;
   cfg.profile.upstream_nodes = vec![url];

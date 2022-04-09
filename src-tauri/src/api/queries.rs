@@ -37,7 +37,6 @@ pub async fn get_account_resources(address: &str) -> anyhow::Result<Vec<MoveReso
 fn test () {
   let b = tauri::async_runtime::block_on(get_account_resources("0x2924db8ef7c619a5c586325193ed1517e0a72b2f68a0b6cd675bb08c821033bb")).unwrap();
 
-  dbg!(&b);
 }
 
 // async fn test_get_transactions_returns_last_page_when_start_version_is_not_specified() {

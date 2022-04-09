@@ -35,6 +35,8 @@ pub async fn execute_request(req: reqwest::RequestBuilder) -> anyhow::Result<ser
 }
 
 
+/// get a working endpoint from the list of upstream peers.
+// TODO: endpoints need to be TESTED to check for ledger info once selected.
 
 pub fn pick_endpoint() -> anyhow::Result<Url> {
   let cfg = configs::get_cfg()?;
@@ -49,5 +51,4 @@ pub fn pick_endpoint() -> anyhow::Result<Url> {
 // We want to get the JSON object back into a type.
 fn _todo_deserialize_response(val: serde_json::Value) {
   let s: Vec<ApiSchema> = serde_json::from_value(val).unwrap();
-  dbg!(&s);
 }

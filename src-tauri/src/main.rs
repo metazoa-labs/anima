@@ -31,9 +31,9 @@ fn main() {
 
   let menu = Menu::new()
     .add_submenu(Submenu::new(
-      "anima_canary",
+      "Anima Wallet",
       Menu::new()
-        // .add_native_item(MenuItem::About("anima_canary".to_string()))
+        // .add_native_item(MenuItem::About("Anima".to_string()))
         .add_native_item(MenuItem::Quit),
     ))
     .add_submenu(Submenu::new("Edit", {
