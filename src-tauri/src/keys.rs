@@ -3,6 +3,7 @@
 use aptos_types::transaction::authenticator::AuthenticationKey;
 use bip32::{Mnemonic};
 use rand_core::OsRng;
+use crate::configs_profile::set_account_profile;
 use crate::wallet_error::WalletError;
 use crate::configs::default_accounts_db_path;
 
@@ -97,10 +98,14 @@ pub fn danger_init_from_mnem(mnem: String) -> Result<AccountEntry, WalletError> 
   let pair = keys.generate_keypair();
   let authkey = AuthenticationKey::ed25519(&pair.1);
 
-  let creds = keys.generate_credentials_for_account_creation();
+  let (_, _, account ) = keys.generate_credentials_for_account_creation();
 
-  let entry = AccountEntry::new(creds.2, authkey);
+  let entry = AccountEntry::new(account, authkey);
+  // creates the accounts.json if not yet created.
   insert_account_db(entry.clone())?;
+
+  // switches profile andcreates the .toml file if not yet created
+  set_account_profile(&account, authkey)?;
 
   Ok(entry)
 }
