@@ -49,14 +49,10 @@
 
 </script>
 
-<main class="uk-margin-top">
-  <div
-    uk-toggle="target: #offcanvas-nav"
-  >
+<main>
+  <div uk-toggle="target: #offcanvas-nav" style="margin-top: 5px;">
     <span uk-icon="icon: menu" />
   </div>
-
-
 
   {#if secondaryRoutes.includes($location.pathname)}
     <Link to={routes.home}

@@ -133,7 +133,7 @@
   },
   "events": {
     "account_events": "Account Events",
-    "version": "Version",
+    "version": "Block",
     "type": "Type",
     "amount": "Amount",
     "sender": "Sender",

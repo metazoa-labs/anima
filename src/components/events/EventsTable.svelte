@@ -165,7 +165,6 @@
     padding: 0px 10px 0px 10px;
     margin: 0px;
     border-radius: 30px;
-    background-color: #F0F0F0;
   }
   .previous-page-btn {
     display: flex;
@@ -173,9 +172,7 @@
     width: 20px; 
     height: 20px; 
     border-radius: 100%; 
-    color: grey;
-    background-color: #F0F0F0; 
-    border-radius: 100%; 
+    color: white;
     padding: 5px; 
     margin: 0px 10px 0px 0px;
   }
@@ -186,9 +183,7 @@
     width: 20px; 
     height: 20px; 
     border-radius: 100%; 
-    color: grey;
-    background-color: #F0F0F0; 
-    border-radius: 100%; 
+    color: white;
     padding: 5px; 
     margin: 0px 0px 0px 10px;
   }

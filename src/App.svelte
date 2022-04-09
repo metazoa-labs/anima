@@ -21,6 +21,7 @@
   import { walletTick } from "./tick";
   import { init_preferences } from "./preferences";
   import { initTitleBar } from "./windowTitle";
+import Transfer from "./components/account/Transfer.svelte";
 
   init_preferences();
 
@@ -47,9 +48,10 @@
   <div class="uk-container">
     <Router>
       <Nav />
-      <div class="uk-margin-large">
+      <div class="uk-margin-top">
         <Route path={routes.home} component={Wallet} primary={false} />
         <Route path={routes.account} component={Account} primary={false} />
+        <Route path={routes.transfer} component={Transfer} primary={false} />
         <Route
           path={routes.accountFromMnem}
           component={AccountFromMnemForm}

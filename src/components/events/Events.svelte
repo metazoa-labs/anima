@@ -46,24 +46,20 @@
 
 </script>
   
-<main class="uk-height-viewport">
-  <div style="position:relative">
-    <div class="uk-flex uk-flex-left">
-      <h4 class="uk-text-uppercase">Transfers</h4>
-    </div>
-    {#if loadingError}
-      <p class="uk-text-center uk-text-warning">{$_("events.loading.error")}</p>
-      <p class="uk-text-center uk-text-warning">{loadingError}</p>
-      {#if !account.on_chain}
-        <div style="position:absolute; top:0px; left:0px">
-          <Link to={routes.home}><span class="" uk-icon="icon: arrow-left; ratio: 2;" /></Link>
-        </div>
-      {/if}
-    {:else if events == null} 
-      <span uk-spinner style="position:absolute; top:0px; left:0px"/>
-      <EventsTableDummy />
-    {:else}
-      <EventsTable {events} />
+<main>
+  <p class="uk-text-uppercase">Transfers:</p>
+  {#if loadingError}
+    <p class="uk-text-center uk-text-warning">{$_("events.loading.error")}</p>
+    <p class="uk-text-center uk-text-warning">{loadingError}</p>
+    {#if !account.on_chain}
+      <div style="position:absolute; top:0px; left:0px">
+        <Link to={routes.home}><span class="" uk-icon="icon: arrow-left; ratio: 2;" /></Link>
+      </div>
     {/if}
-  </div>
+  {:else if events == null} 
+    <span uk-spinner style="position:absolute; top:0px; left:0px"/>
+    <EventsTableDummy />
+  {:else}
+    <EventsTable {events} />
+  {/if}
 </main>
