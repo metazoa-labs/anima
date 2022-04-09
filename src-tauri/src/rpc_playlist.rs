@@ -1,20 +1,28 @@
 //! seed peers for connecting to various networks.
 use crate::app_cfg;
-use anyhow::Error;
+use anyhow::{Error, bail};
 use rand::{seq::SliceRandom, thread_rng};
 use reqwest;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::path::PathBuf;
 use url::Url;
 
-#[derive(Deserialize)]
+
+#[derive(Deserialize, Serialize, Debug, Clone, PartialEq)]
+
+pub enum NetworkName {
+  Aptos
+}
+#[derive(Deserialize, Serialize, Debug, Clone)]
 /// A list of host information for upstream fullnodes serving RPC servers
 pub struct FullnodePlaylist {
-  ///
+  /// enum of network supported
+  pub name: NetworkName,
+  /// list of nodes
   pub nodes: Vec<HostInfo>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 /// infor for the RPC peers connection.
 pub struct HostInfo {
   ///
@@ -24,21 +32,30 @@ pub struct HostInfo {
 }
 
 pub fn make_url(git_path: &str, filename: &str) -> Result<Url, Error> {
-  let f = format!("{}/{}", git_path, filename);
+  let f = format!("{}/{}.json", git_path, filename);
+  dbg!(&f);
   Ok(f.parse()?)
 }
 
-/// try to fetch current fullnodes from a URL, or default to a seed peer list
-pub fn get_known_fullnodes(seed_url: Url) -> Result<FullnodePlaylist, Error> {
-  FullnodePlaylist::http_fetch_playlist(seed_url)
-}
+// /// try to fetch current fullnodes from a URL, or default to a seed peer list
+// pub fn get_known_fullnodes(seed_url: Url) -> Result<FullnodePlaylist, Error> {
+//   FullnodePlaylist::http_fetch_playlist(seed_url)
+// }
 
 impl FullnodePlaylist {
   /// use a URL to load a fullnode playlist
   pub fn http_fetch_playlist(url: Url) -> Result<FullnodePlaylist, Error> {
     let res = reqwest::blocking::get(url)?;
-    let play: FullnodePlaylist = serde_json::from_str(&res.text()?)?; //res.text()?.parse()?;
-    Ok(play)
+
+    let all_networks: Vec<FullnodePlaylist> = serde_json::from_str(&res.text()?)?; 
+    match all_networks.into_iter()
+    .find(|e| {
+      // TODO: make network name a param in function.
+      e.name == NetworkName::Aptos
+    }) {
+        Some(p) => Ok(p),
+        None => bail!("cannot get playlist for this network"),
+    }
   }
 
   /// extract the urls from the playlist struct

@@ -1,4 +1,4 @@
-//! tauriWallet configs file
+//! anima_canary configs file
 
 use std::path::PathBuf;
 use anyhow::Error;
@@ -8,32 +8,25 @@ use reqwest::Url;
 use crate::app_cfg::{parse_toml, AppCfg};
 use crate::key_manager;
 
-static APP_CONFIG_FILE: &str = "tauriWallet.toml";
+// TODO This is duplicated
+static APP_CONFIG_FILE: &str = "anima_canary.toml";
 static ACCOUNTS_DB_FILE: &str = "accounts.json";
-static ACCOUNTS_DB_FILE_REX: &str = "accounts-rex.json";
 
 // get the config path for files
 pub fn default_config_path() -> PathBuf {
   dirs::home_dir()
     .unwrap()
-    .join(".tauriWallet")
+    .join(".anima_canary")
     .join(APP_CONFIG_FILE)
 }
 
-/// Get all the tauriWallet configs. For tx sending and upstream nodes
+/// Get all the anima_canary configs. For tx sending and upstream nodes
 pub fn get_cfg() -> Result<AppCfg, Error> {
   parse_toml(None) // gets default toml path.
 }
 
 pub fn default_accounts_db_path() -> PathBuf {
-  let db_file = match get_cfg() {
-    Ok(cfg) => match cfg.chain_info.chain_id.as_str() {
-      "Rex" => ACCOUNTS_DB_FILE_REX,
-      _ => ACCOUNTS_DB_FILE,
-    },
-    Err(_) => ACCOUNTS_DB_FILE,
-  };
-  dirs::home_dir().unwrap().join(".tauriWallet").join(db_file)
+  dirs::home_dir().unwrap().join(".anima_canary").join(ACCOUNTS_DB_FILE)
 }
 
 /// All the parameters needed for a client transaction.

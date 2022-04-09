@@ -3,22 +3,25 @@ import { invoke } from '@tauri-apps/api/tauri';
 import { raise_error } from './walletError';
 import { responses } from './debug';
 import { notify_success } from './walletNotify';
-import { AccountEntry, all_accounts, isInit, isRefreshingAccounts, mnem, signingAccount, accountEvents } from './accounts';
+import { AccountEntry, all_accounts, isInit, isRefreshingAccounts, mnem, signingAccount, accountEvents, isAccountsLoaded } from './accounts';
 
 export const loadAccounts = async () => { 
   // fetch data from local DB
   return invoke('get_all_accounts')
-    .then((result: object) => {
+    .then((result: { accounts: AccountEntry[]}) => {
       all_accounts.set(result.accounts);
       
       if (get(signingAccount).account == "" && result.accounts.length > 0) {
         // set initial signingAccount
         let first = result.accounts[0];
-        setAccount(first.account);
+        setAccount(first.account, false);
       } else {
         /* TODO no accounts in the current network
         signingAccount.set(new_account("", "", ""));
         */
+      }
+      if (!get(isAccountsLoaded)) {
+        isAccountsLoaded.set(true);
       }
       // fetch data from the chain
       return refreshAccounts();
@@ -29,10 +32,8 @@ export const loadAccounts = async () => {
 export const refreshAccounts = async () => {
   isRefreshingAccounts.set(true);
   return invoke('refresh_accounts')
-    .then((result: object) => { // TODO make this the correct return type
-
+    .then((result: { accounts: AccountEntry[] }) => { // TODO make this the correct return type
       all_accounts.set(result.accounts);
-
       result.accounts.forEach(el => {
         tryRefreshSignerAccount(el);
       });
@@ -68,11 +69,12 @@ export function findOneAccount(account: string): AccountEntry {
   return found
 }
 
-export const setAccount = async (an_address: string) => { 
+export const setAccount = async (an_address: string, notifySucess = true) => { 
   if (get(signingAccount).account == an_address) {
     return
   }
- 
+
+
   let a = findOneAccount(an_address);
 
   // optimistic switch
@@ -88,9 +90,11 @@ export const setAccount = async (an_address: string) => {
   invoke("switch_profile", {
     account: a.account,
   })
-  .then((res) => {
-    responses.set(res);
-    notify_success("Account switched to " + a.nickname);
+  .then((res: AccountEntry) => {
+    responses.set(JSON.stringify(res));
+    if (notifySucess) {
+      notify_success("Account switched to " + a.nickname);
+    }
   })
   .catch((e) => {
     raise_error(e, false, "setAccount");
@@ -107,16 +111,26 @@ export function addNewAccount(account: AccountEntry) {
   all_accounts.set(list);
 }
 
-export function checkAccountBalance(account: AccountEntry) {
-  invoke('query_balance', {account: account.account})
+export function checkSigningAccountBalance() {
+  let selected = get(signingAccount);
+  invoke('query_balance', {account: selected.account})
     .then((balance: number) => {
-      let list = get(all_accounts);
-      account.on_chain = true;
-      account.balance = Number(balance);
-      list.push(account);    
+      // update signingAccount
+      selected.on_chain = true;
+      selected.balance = Number(balance);
+      signingAccount.set(selected);
+      
+      // update all accounts set
+      let list = get(all_accounts).map(each => {
+        if (each.account == selected.account) {
+          each.on_chain = true;
+          each.balance = Number(balance);
+        }
+        return each;
+      });
       all_accounts.set(list);
     })
-    .catch((e) => raise_error(e, false, "checkAccountBalance"));
+    .catch((e) => raise_error(e, false, "checkSigningAccountBalance"));
 }
 
 export function getAccountEvents(account: AccountEntry, errorCallback = null) {
@@ -128,12 +142,14 @@ export function getAccountEvents(account: AccountEntry, errorCallback = null) {
 
   invoke('get_account_events', {account: address.toUpperCase()})
     .then((events: Array<any>) => {
-      console.log(events);
       let all = get(accountEvents);     
       all[address] = events
-        .filter(each => each.data.e_type == "receivedpayment" || each.data.e_type == "sentpayment")
-        .reverse();
-      console.log(all);
+        .sort((a, b) => (a.transaction_version < b.transaction_version)
+          ? 1
+          : (b.transaction_version < a.transaction_version)
+            ? -1
+            : 0
+        );
       accountEvents.set(all);
     })
     .catch(e => {

@@ -75,6 +75,15 @@
       .catch((e) => console.error(e));
   };
 
+    const get_root_account = async () => {
+    invoke("get_root_account", {})
+      .then((res) => {
+        responses.set(res);
+      })
+      .catch((e) => console.error(e));
+  };
+  
+
   const killForever = async () => {
     const current = getCurrent();
     current.emit('kill_forever', 'Tauri is awesome!');
@@ -102,6 +111,10 @@
 
     <div class="uk-margin-medium-bottom">
       <button class="uk-button uk-button-default" on:click={init}>Init</button>
+    </div>
+
+    <div class="uk-margin-medium-bottom">
+      <button class="uk-button uk-button-default" on:click={get_root_account}>Get 0x0</button>
     </div>
 
     <DemoTx />

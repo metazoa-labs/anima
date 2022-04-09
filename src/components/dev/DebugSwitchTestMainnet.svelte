@@ -8,13 +8,16 @@
     setNetwork,
     getNetwork,
     network_profile,
-    Networks,
+    NetworkID,
+  ledger_info,
+LedgerInfo,
   } from "../../networks";
 
   import type { NetworkProfile} from "../../networks";
 
   let current_chain_id = "";
   let waypoint = "";
+  let li: LedgerInfo;
 
   function updateWaypoint() {
     // check input data
@@ -35,32 +38,75 @@
       waypoint = n.waypoint;
       current_chain_id = n.chain_id;
     });
+
+    ledger_info.subscribe((r: LedgerInfo) => li = r);
   });
 </script>
 
 <div class="uk-margin-medium-bottom">
+
+  <h4 class=" uk-text-uppercase  ">
+    Ledger Info
+  </h4>
+  {#if li && li.chain_id > 0}
+  <div>
+    <span>Chain id: {li.chain_id}</span>
+    <span>Epoch: {li.epoch}</span>
+    <span>Ledger Version: {li.ledger_version}</span>
+    <span>Ledger Timestamp: {li.ledger_timestamp}</span>
+
+  </div>
+  {:else}
+  <span>Cannot Connect To Network, No Ledger Info Found.</span>
+  {/if}
+
+
   <h4 class=" uk-text-uppercase  ">
     Network Connection
   </h4>
+
+  <!-- TODO: Change this to an interator of type NetworkID -->
   <div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-    <label
+    {#each Object.values(NetworkID) as e}
+        <label
       ><input
         class="uk-radio"
         type="radio"
         name="networkCb"
-        checked={current_chain_id == "Mainnet"}
-        on:click={() => setNetwork(Networks.Mainnet)}
-      /> Mainnet
+        checked={current_chain_id == e}
+        on:click={() => setNetwork(e)}
+      /> {e}
     </label>
-    <label
+      
+    {/each}
+
+    <!-- <label
       ><input
         class="uk-radio"
         type="radio"
         name="networkCb"
-        checked={current_chain_id == "Rex"}
-        on:click={() => setNetwork(Networks.Rex)}
-      /> Rex (testnet)
+        checked={current_chain_id == "Testnet"}
+        on:click={() => setNetwork(NetworkID.Testnet)}
+      /> Testnet
     </label>
+        <label
+      ><input
+        class="uk-radio"
+        type="radio"
+        name="networkCb"
+        checked={current_chain_id == "Devnet"}
+        on:click={() => setNetwork(NetworkID.Devnet)}
+      /> Testnet
+    </label>
+        <label
+      ><input
+        class="uk-radio"
+        type="radio"
+        name="networkCb"
+        checked={current_chain_id == "Local"}
+        on:click={() => setNetwork(NetworkID.Local)}
+      /> Testnet
+    </label> -->
   </div>
 
   <h5 class=" uk-text-uppercase  ">

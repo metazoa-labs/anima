@@ -3,6 +3,7 @@
   import DebugActions from "./DebugActions.svelte";
   import DebugSwitchTestMainnet from "./DebugSwitchTestMainnet.svelte";
   import DebugSwitcher from "./DebugSwitcher.svelte";
+import DebugRootState from "./DebugRootState.svelte";
 </script>
 
 <main class="uk-height-viewport">
@@ -12,5 +13,6 @@
     <p class="uk-margin-bottom"> Turn on debug actions on all screens</p>
     <DebugSwitchTestMainnet />
     <DebugActions />
+    <DebugRootState />
   </div>
 </main>

@@ -1,9 +1,11 @@
 //! Configs for wallet app
 
 use anyhow::Error;
+use aptos_types::{transaction::authenticator::AuthenticationKey};
 use dirs;
 use reqwest::Url;
 use serde::{Deserialize, Serialize};
+use move_core_types::account_address::AccountAddress;
 
 use std::{
   fs::{self, File},
@@ -11,9 +13,11 @@ use std::{
   path::PathBuf,
 };
 
+use crate::configs_network::NetworkID;
 
-static APP_HOME: &str = ".tauriWallet";
-static CONFIG_FILE: &str = "tauriWallet.toml";
+
+static APP_HOME: &str = ".anima_canary";
+static CONFIG_FILE: &str = "anima_canary.toml";
 
 /// App Configuration
 #[derive(Clone, Debug, Deserialize, Serialize)]
@@ -95,7 +99,7 @@ impl Default for Workspace {
 // #[serde(deny_unknown_fields)]
 pub struct ChainInfo {
   /// Chain that this work is being committed to
-  pub chain_id: String,
+  pub chain_id: NetworkID,
 
   /// Epoch from which the node started syncing
   pub base_epoch: Option<u64>,
@@ -108,7 +112,7 @@ pub struct ChainInfo {
 impl Default for ChainInfo {
   fn default() -> Self {
     Self {
-      chain_id: "1".to_string(),
+      chain_id: NetworkID::Devnet,
       base_epoch: Some(0),
       // Mock Waypoint.
       base_waypoint: Some("0:0".to_owned()),
@@ -121,10 +125,10 @@ impl Default for ChainInfo {
 // NOTE: all account and auth_key should use the actual type, not String.
 pub struct Profile {
   /// The wallet account
-  pub account: String,
+  pub account: AccountAddress,
 
   /// The account's authkey.
-  pub auth_key: String,
+  pub auth_key: AuthenticationKey,
 
   /// Other nodes to connect for fallback connections
   pub upstream_nodes: Vec<Url>,
@@ -133,8 +137,8 @@ pub struct Profile {
 impl Default for Profile {
   fn default() -> Self {
     Self {
-      account: "".to_owned(),
-      auth_key: "".to_owned(),
+      account: AccountAddress::ZERO,
+      auth_key: AuthenticationKey::zero(),
       upstream_nodes: vec!["http://localhost:8080".parse().expect("parse url")],
     }
   }

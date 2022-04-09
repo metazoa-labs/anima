@@ -8,17 +8,10 @@
 </script>
 
 <main style="position:absolute" class="uk-position-center uk-margin-large">
-  <div class="uk-container uk-align-center">
-    <h1 class="  uk-text-uppercase uk-text-center">{$_("wallet.tauriWallet")}</h1>
-    <h5 class="  uk-text-uppercase uk-text-center">{$_("wallet.newbie_message")}</h5>
-  </div>
-
+  <img src="/anima-logo-white.svg" alt="drawing" width="100%"/>
     <div uk-grid class="uk-margin uk-flex uk-flex-center">
-    <Link to={routes.keygen}>
-      <button class="uk-button uk-button-primary">{$_("wallet.btn_new_account")}</button>
-    </Link>
-    <Link to={routes.accountFromMnem}>
-      <button class="uk-button uk-button-default">{$_("wallet.btn_restore_account")}</button>
+    <Link to={routes.keygen}>  
+       <span uk-icon="icon: play-circle; ratio: 2"></span>
     </Link>
   </div>
 </main>

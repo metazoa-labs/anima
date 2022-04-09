@@ -7,15 +7,15 @@ use url::Url;
 use crate::{
   app_cfg::AppCfg,
   configs::{self},
-  rpc_playlist,
+  rpc_playlist::{self, FullnodePlaylist},
   wallet_error::WalletError,
 };
 
-static DEFAULT_GIT: &str = "https://raw.githubusercontent.com/bicho-labs/tauri-wallet/seed-peers";
+static DEFAULT_GIT: &str = "https://raw.githubusercontent.com/metazoa-labs/anima/api/seed_peers/";
 
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
 pub struct NetworkProfile {
-  pub chain_id: String, // Todo, use the Network Enum
+  pub chain_id: NetworkID, // Todo, use the Network Enum
   pub urls: Vec<Url>,
   pub waypoint: String, // NOTE: Use the Actual Waypoint Type
   pub profile: String,  // tbd, to use default node, or to use upstream, or a custom url.
@@ -33,8 +33,8 @@ impl NetworkProfile {
   }
 }
 
-#[derive(serde::Deserialize, serde::Serialize, Debug)]
-pub enum Networks {
+#[derive(serde::Deserialize, serde::Serialize, Debug, Clone)]
+pub enum NetworkID {
   Mainnet,
   Testnet,
   Devnet,
@@ -42,7 +42,7 @@ pub enum Networks {
   Custom { playlist_url: Url },
 }
 
-impl fmt::Display for Networks {
+impl fmt::Display for NetworkID {
   fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
     write!(f, "{:?}", self)
     // or, alternatively:
@@ -50,39 +50,39 @@ impl fmt::Display for Networks {
   }
 }
 
-pub fn set_network_configs(network: Networks) -> Result<NetworkProfile, WalletError> {
-  dbg!("toggle network");
+pub fn set_network_configs(network: NetworkID) -> Result<NetworkProfile, WalletError> {
+  dbg!("toggle network", &network);
   let playlist = match &network {
-    Networks::Testnet => rpc_playlist::get_known_fullnodes(rpc_playlist::make_url(
+    NetworkID::Testnet => FullnodePlaylist::http_fetch_playlist(rpc_playlist::make_url(
       DEFAULT_GIT,
       "fullnode_seed_playlist_testnet",
     )?)?,
 
     // fullnode_seed_playlist_testnet
-    Networks::Devnet => rpc_playlist::get_known_fullnodes(rpc_playlist::make_url(
+    NetworkID::Devnet => FullnodePlaylist::http_fetch_playlist(rpc_playlist::make_url(
       DEFAULT_GIT,
       "fullnode_seed_playlist_devnet",
     )?)?,
 
-    Networks::Local => rpc_playlist::get_known_fullnodes(rpc_playlist::make_url(
+    NetworkID::Local => FullnodePlaylist::http_fetch_playlist(rpc_playlist::make_url(
       DEFAULT_GIT,
       "fullnode_seed_playlist_local",
     )?)?,
 
-    Networks::Custom { playlist_url } => {
-      rpc_playlist::get_known_fullnodes(playlist_url.to_owned())?
+    NetworkID::Custom { playlist_url } => {
+      FullnodePlaylist::http_fetch_playlist(playlist_url.to_owned())?
     }
 
-    Networks::Mainnet => rpc_playlist::get_known_fullnodes(rpc_playlist::make_url(
+    NetworkID::Mainnet => FullnodePlaylist::http_fetch_playlist(rpc_playlist::make_url(
       DEFAULT_GIT,
       "fullnode_seed_playlist",
     )?)?,
   };
 
-  playlist.update_config_file(None)?; // None uses default path of tauriWallet.toml
+  playlist.update_config_file(None)?; // None uses default path of anima_canary.toml
 
   // TODO: I don't think chain ID needs to change.
-  set_chain_id(network.to_string()).map_err(|e| {
+  set_chain_id(network).map_err(|e| {
     let err_msg = format!("could not set chain id, message: {}", &e.to_string());
     WalletError::misc(&err_msg)
   })?;
@@ -93,18 +93,14 @@ pub fn set_network_configs(network: Networks) -> Result<NetworkProfile, WalletEr
 }
 
 pub fn set_waypoint_from_upstream() -> Result<AppCfg, Error> {
-  let cfg = configs::get_cfg()?;
 
   // try getting waypoint from upstream nodes
   // no waypoint is necessary in advance.
 
   //////////////////////////////
-  // NOTE: use do a request here.
-  let wp: Option<String> = Some("0".to_string());
+  // NOTE:  do a request here.
+  let cfg = set_waypoint("0".to_string())?;
   /////////////////////
-  if let Some(w) = wp {
-    set_waypoint(w)?;
-  }
 
   Ok(cfg)
 }
@@ -119,8 +115,8 @@ pub fn set_waypoint(wp: String) -> Result<AppCfg, Error> {
   Ok(cfg)
 }
 
-/// Get all the tauriWallet configs. For tx sending and upstream nodes
-/// Note: The default_node key in tauriWallet is not used by TauriWallet. TauriWallet randomly tests
+/// Get all the anima_canary configs. For tx sending and upstream nodes
+/// Note: The default_node key in anima_canary is not used by anima_canary. anima_canary randomly tests
 /// all the endpoints in upstream_peers on every TX.
 pub fn override_upstream_node(url: Url) -> Result<AppCfg, Error> {
   let mut cfg = configs::get_cfg()?;
@@ -129,8 +125,8 @@ pub fn override_upstream_node(url: Url) -> Result<AppCfg, Error> {
   Ok(cfg)
 }
 
-// the tauriWallet configs. For tx sending and upstream nodes
-pub fn set_chain_id(chain_id: String) -> Result<AppCfg, Error> {
+// the anima_canary configs. For tx sending and upstream nodes
+pub fn set_chain_id(chain_id: NetworkID) -> Result<AppCfg, Error> {
   let mut cfg = configs::get_cfg()?;
   cfg.chain_info.chain_id = chain_id;
   cfg.save_file()?;

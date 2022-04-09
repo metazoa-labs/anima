@@ -45,7 +45,7 @@ fn read_preferences() -> Result<Preferences, Error> {
 fn preferences_db_path() -> PathBuf {
   dirs::home_dir()
     .unwrap()
-    .join(".tauriWallet")
+    .join(".anima_canary")
     .join(PREFERENCES_DB_FILE)
 }
 
@@ -57,14 +57,14 @@ fn update_preferences(preferences: &Preferences) -> Result<(), WalletError> {
   File::create(db_path)
     .map_err(|e| {
       WalletError::config(&format!(
-        "tauriWallet preferences_db_file should be created!, {:?}",
+        "anima_canary preferences_db_file should be created!, {:?}",
         &e
       ))
     })?
     .write_all(&serialized)
     .map_err(|e| {
       WalletError::config(&format!(
-        "tauriWallet preferences_db_file should be written!, {:?}",
+        "anima_canary preferences_db_file should be written!, {:?}",
         &e
       ))
     })?;

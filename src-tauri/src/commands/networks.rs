@@ -3,14 +3,14 @@
 use crate::{
   configs_network::{
     override_upstream_node, set_network_configs, set_waypoint, set_waypoint_from_upstream,
-    NetworkProfile, Networks,
+    NetworkProfile, NetworkID,
   },
   wallet_error::WalletError,
 };
 use url::Url;
 
 #[tauri::command]
-pub fn toggle_network(network: Networks) -> Result<NetworkProfile, WalletError> {
+pub fn toggle_network(network: NetworkID) -> Result<NetworkProfile, WalletError> {
   set_network_configs(network)
 }
 
@@ -21,7 +21,7 @@ pub fn get_networks() -> Result<NetworkProfile, WalletError> {
 
 #[tauri::command]
 pub fn override_playlist(playlist_url: Url) -> Result<NetworkProfile, WalletError> {
-  set_network_configs(Networks::Custom { playlist_url })
+  set_network_configs(NetworkID::Custom { playlist_url })
 }
 
 #[tauri::command]

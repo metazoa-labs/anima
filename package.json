@@ -5,17 +5,19 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --no-clear",
+    "start": "sirv public --no-clear --port 5050",
     "check": "svelte-check --tsconfig ./tsconfig.json",
     "tauri": "tauri"
   },
   "devDependencies": {
     "@rollup/plugin-commonjs": "^17.0.0",
+    "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
     "@rollup/plugin-typescript": "^8.0.0",
     "@tauri-apps/cli": "^1.0.0-rc.8",
+    "@tauri-apps/tauricon": "github:tauri-apps/tauricon",
     "@tsconfig/svelte": "^2.0.0",
-    "@rollup/plugin-json": "^4.1.0",
+    "less": "^4.1.2",
     "rollup": "^2.3.4",
     "rollup-plugin-css-only": "^3.1.0",
     "rollup-plugin-livereload": "^2.0.0",
@@ -24,6 +26,7 @@
     "svelte": "^3.0.0",
     "svelte-check": "^2.0.0",
     "svelte-preprocess": "^4.0.0",
+    "svelte-preprocess-less": "^0.4.0",
     "tslib": "^2.0.0",
     "typescript": "^4.0.0"
   },

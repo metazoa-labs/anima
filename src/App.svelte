@@ -11,6 +11,7 @@
   import Transactions from "./components/txs/Transactions.svelte";
   import Events from "./components/events/Events.svelte";
   import About from "./components/about/About.svelte";
+
   import { getEnv, debugMode } from "./debug";
   import { routes } from "./routes";
   import "uikit/dist/css/uikit.min.css";
@@ -18,14 +19,17 @@
   import { getVersion } from "./version";
   import { walletTick } from "./tick";
   import { init_preferences } from "./preferences";
-  
+  import { initTitleBar } from "./windowTitle";
+
   init_preferences();
- 
+
   let healthTick;
   let debug = false;
 
   onMount(async () => {
 
+    initTitleBar();
+    
     isWalletInit();
 
     getEnv();
@@ -41,9 +45,11 @@
   onDestroy(() => {
     clearInterval(healthTick);
   })
+
+
 </script>
 
-<main class="uk-height-viewport">
+<main class="uk-height-viewport gradient uk-light">
   <div class="uk-container">
     <Router>
       <Nav />
@@ -67,8 +73,6 @@
         {#if debug }
           <DebugCard/>
         {/if}
-
-
       </div>
     </Router>
   </div>  

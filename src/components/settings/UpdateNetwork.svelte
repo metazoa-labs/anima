@@ -38,7 +38,9 @@
 </script>
 
 <main class="uk-margin">
-  <h4 class=" uk-text-uppercase  "> {$_("settings.network_settings.title")} {current_chain_id}</h4>
+  <h4 class=" uk-text-uppercase  "> {$_("settings.network_settings.title")}</h4>
+
+  <h5> Chain ID: {current_chain_id} </h5>
 
   <h5 class=" uk-text-uppercase  "> {$_("settings.network_settings.list_of_peers")} </h5>
   <p>{$_("settings.network_settings.description")}</p>

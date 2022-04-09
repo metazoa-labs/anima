@@ -1,4 +1,5 @@
 dev: stop
+	yarn install
 	yarn tauri dev 
 
 stop:

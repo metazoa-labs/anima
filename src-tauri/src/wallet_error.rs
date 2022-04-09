@@ -1,4 +1,4 @@
-//! TauriWallet error type for client
+//! anima_canary error type for client
 
 #[derive(serde::Deserialize, serde::Serialize, Debug, Clone)]
 pub enum ErrorCat {

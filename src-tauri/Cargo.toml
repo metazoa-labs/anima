@@ -1,11 +1,11 @@
 [package]
-name = "tauri-wallet"
+name = "anima-wallet"
 version = "0.0.1"
-description = "a crypto wallet template"
+description = "a crypto wallet"
 authors = ["you"]
 license = ""
 repository = ""
-default-run = "tauri-wallet"
+default-run = "anima-wallet"
 edition = "2021"
 rust-version = "1.57"
 
@@ -30,6 +30,20 @@ reqwest = { version = "0.11.6", features = ["blocking"] }
 hex = "0.4.3"
 dirs = "4.0.0"
 toml = "0.5.8"
+sha2 = "0.10.2"
+warp = "^0.3"
+bcs = "0.1.2"
+
+aptos-keygen = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "bedc99f124f162a898b5330ddc9537b27510fdfd"}
+
+aptos-types = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "bedc99f124f162a898b5330ddc9537b27510fdfd"}
+
+aptos-sdk = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "bedc99f124f162a898b5330ddc9537b27510fdfd"}
+
+aptos-api-types = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "bedc99f124f162a898b5330ddc9537b27510fdfd"}
+
+move-core-types = { git = "https://github.com/diem/move", rev = "3fe033b112eae7df2d15ab3467624165ae510caa", version = "0.0.3", features= ["address32"] }
+
 
 [features]
 # by default Tauri runs in production mode

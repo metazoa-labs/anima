@@ -1,5 +1,4 @@
 import { get, writable } from 'svelte/store';
-import { displayInsufficientBalance, displayDiscontinuity, displayInvalidProof, displayTooManyProofs, displayWrongDifficulty } from './walletErrorUI';
 import { notify_error } from './walletNotify';
 export interface WalletError {
   category: number;
@@ -7,17 +6,20 @@ export interface WalletError {
   msg: string;
 };
 
+function empty_err(): WalletError{
+  return {
+    category: 0,
+    uid: 0,
+    msg: ""
+  }
+}
+
 export enum ErrMap {
   NoClientCx = 404,
   AccountDNE = 1004,
-  InsufficientBalance = 12015, // from DiemAccount.move
-  WrongDifficulty = 130102,
-  TooManyProofs = 130108,
-  Discontinuity = 130109,
-  InvalidProof = 130110,
 }
 // let list_errors: WalletError;
-export const walletErrorLog = writable <[WalletError]>([]);
+export const walletErrorLog = writable<[WalletError]>([]);
 
 export function raise_error(err: WalletError, quiet: boolean = false, caller: string) {
   let hasCustomErrorDisplay = false;
@@ -44,7 +46,7 @@ export function raise_error(err: WalletError, quiet: boolean = false, caller: st
 
 
 export function clearErrors() {
-  walletErrorLog.set([]);
+  walletErrorLog.set([]); // TODO: Assign this to empty array without causing TS error.
 }
 
 // returns true if there is a UI for the error, so we know to display generic error notification.
@@ -53,46 +55,13 @@ export const errAction = (err: WalletError): boolean => {
     case ErrMap.NoClientCx:
       // window.alert("no client connection");
       return false // todo
-      break;
 
     case ErrMap.AccountDNE:
       // window.alert("account does not exist");
       return false //todo
-      break;
 
-    case ErrMap.WrongDifficulty:
-      // window.alert("wrong difficulty");
-      displayWrongDifficulty.set(err);
-      break;
-      
-    case ErrMap.TooManyProofs:
-      displayTooManyProofs.set(err);
-
-      // window.alert("too many proofs submitted in epoch");
-      break;
-
-    case ErrMap.Discontinuity:
-      displayDiscontinuity.set(err);
-      // window.alert("your proofs are not chained. Perhaps some proofs have not been sent?");
-      break;
-
-    // TODO: this last one may never/rarely occur. 
-    case ErrMap.InvalidProof:
-      // window.alert("proof does not verify");
-      displayInvalidProof.set(err);
-
-      break;
-    
-      case ErrMap.InsufficientBalance:
-      // window.alert("insufficient balance");
-      displayInsufficientBalance.set(err);
-
-      break;
-      
 
     default:
       return false
-      break;
   }
-  return true
 }

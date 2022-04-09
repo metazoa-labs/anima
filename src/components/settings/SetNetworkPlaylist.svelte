@@ -2,7 +2,7 @@
   import { Link } from "svelte-navigator";
   import type { WalletError } from "../../walletError";
   import { raise_error } from "../../walletError";
-  import { network_profile, refreshWaypoint } from "../../networks";
+  import { network_profile } from "../../networks";
   import type { NetworkProfile} from "../../networks";
   import { invoke } from "@tauri-apps/api/tauri";
   import { routes } from "../../routes";
@@ -10,7 +10,7 @@
   import { _ } from "svelte-i18n";
 
   // default playlist which is provided in TauriWallet.
-  let playlist_json_url = "https://raw.githubusercontent.com/bicho-labs/seed-peers/main/fullnode_seed_playlist.json";
+  let playlist_json_url = "https://raw.githubusercontent.com/metazoa-labs/anima/seed_peers/main/fullnode_seed_playlist.json";
 
   function updateNetwork() {
     // check input data

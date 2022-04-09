@@ -13,6 +13,8 @@ pub mod configs_profile;
 pub mod key_manager;
 pub mod rpc_playlist;
 pub mod wallet_error;
+pub mod api;
+pub mod keys;
 
 use crate::commands::*;
 use tauri::{Menu, MenuItem, Submenu};
@@ -29,9 +31,9 @@ fn main() {
 
   let menu = Menu::new()
     .add_submenu(Submenu::new(
-      "TauriWallet",
+      "anima_canary",
       Menu::new()
-        // .add_native_item(MenuItem::About("TauriWallet".to_string()))
+        // .add_native_item(MenuItem::About("anima_canary".to_string()))
         .add_native_item(MenuItem::Quit),
     ))
     .add_submenu(Submenu::new("Edit", {
@@ -70,16 +72,18 @@ fn main() {
       refresh_waypoint,
       toggle_network,
       // Queries
+      query_ledger_info,
       query_balance,
       // Transactions
-
       get_env,
       set_env,
       // Version
       get_app_version,
       // Preferences
       get_preferences,
-      set_preferences_locale
+      set_preferences_locale,
+      // Debug
+      get_root_account,
     ])
     .menu(menu)
     .run(tauri::generate_context!())
