@@ -25,7 +25,7 @@
    
 </script>
   
-<main class="uk-height-viewport">
+<main>
   <div class="uk-flex uk-flex-center">
     <h2 class="uk-text-uppercase">Account View</h2>
   </div>

@@ -6,7 +6,7 @@
 
   export let events;
   
-  const maxPageSize = 5;
+  const maxPageSize = 3;
   const eventTypesDic = {
     receivedpayment: "Received",
     sentpayment: "Sent"
@@ -51,7 +51,7 @@
 
 </script>
 
-<main class="uk-height-viewport">
+<main>
   <!-- Table -->
   <table class="uk-table uk-table-divider">
     <thead>

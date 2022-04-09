@@ -144,78 +144,77 @@
     Transfer Coins
   </h2>
 
-  <div class="uk-text-center ">
-    <div class="uk-margin-bottom uk-flex" style="width: 140px; margin: auto;">
+  <div class="uk-text-center uk-margin-bottom">
+    <div class="uk-flex" style="width: 140px; margin: auto;">
       <div class="transfer-step {getStepClass(step, 1)}"></div>
       <div class="transfer-step {getStepClass(step, 2)}"></div>
       <div class="transfer-step {getStepClass(step, 3)}"></div>
     </div>
   </div>
 
-  {#if step == 1}
-    <div class="uk-margin-bottom">
-      <p>Enter the address to transfer coins and click NEXT to continue.</p>
-      <label class="uk-form-label" for="receiver-text">Receiver Address</label>
-      <div class="uk-form-controls">
+  <div class="uk-section">
+    {#if step == 1}
+      <div class="uk-margin-bottom">
+        <p>Enter the address to transfer coins and click NEXT to continue.</p>
+        <label class="uk-form-label" for="receiver-text">Receiver Address</label>
+        <div class="uk-form-controls">
+          <input
+            id="receiver-text"
+            autofocus
+            class="uk-input"
+            type="text"
+            placeholder="Type a valid address"
+            bind:value={receiver}
+          />
+        </div>
+      </div>
+    {:else if step == 2}
+      <p>Enter the amount of coins you wnat to transfer and click NEXT.</p>
+      <p><span class="uk-text-uppercase">Current balance: </span> <span class="uk-text-bold">{printCoins(account.balance)}</span></p>
+      <label class="uk-form-label" for="amount-text">Amount to transfer</label>
+      <div class="uk-form-controls uk-width-1-1">
+        <!-- add mask -->
         <input
-          id="receiver-text"
-          autofocus
+          id="amount-text"
           class="uk-input"
           type="text"
-          placeholder="Type a valid address"
-          bind:value={receiver}
+          placeholder="0.00"
+          bind:value={amountFormatted}
+          bind:this={amountInput}
+          on:input={handleChange}
         />
-      </div>
-    </div>
-  {:else if step == 2}
-    <p>Enter the amount of coins you wnat to transfer and click NEXT.</p>
-    <p><span class="uk-text-uppercase">Current balance: </span> <span class="uk-text-bold">{printCoins(account.balance)}</span></p>
-    <label class="uk-form-label" for="amount-text">Amount to transfer</label>
-    <div class="uk-form-controls uk-width-1-1">
-      <!-- add mask -->
-      <input
-        id="amount-text"
-        class="uk-input"
-        type="text"
-        placeholder="0.00"
-        bind:value={amountFormatted}
-        bind:this={amountInput}
-        on:input={handleChange}
-      />
-    </div> 
-  {:else if step == 3}
-    <p>Now please review your transferm information and click CONFIRM to submit tramsaction.</p>
-    <p><span class="uk-text-uppercase">Sender: </span> <span class="uk-text-bold">{account.account}</span></p>
-    <p><span class="uk-text-uppercase">Receiver: </span> <span class="uk-text-bold">{receiver}</span></p>
-    <p><span class="uk-text-uppercase">Amount: </span> <span class="uk-text-bold">{printUnscaledCoins(amount)}</span></p>
-  {:else if step == 4}
-    4
-  {:else}
-    <p>Ops. You are lost... Go back to Account view.</p>
-  {/if}
-
-  <div>
-    <p class="uk-text-warning">{errorCheck}</p>
-    <button 
-      disabled={isWaiting}
-      on:click={nextClick} 
-      class="uk-button uk-button-primary uk-align-right"
-    >
-      {isWaiting 
-        ? "Await"
-        : step == 3 
-          ? "Confirm" 
-          : "Next"
-      }
-    </button>        
-    <button on:click={backClick} class="uk-button uk-button-default uk-align-right">
-      {step == 1 ? "Cancel" : "Back"}
-    </button>   
-    {#if isWaiting}     
-      <div class="uk-align-right" uk-spinner></div>
+      </div> 
+    {:else if step == 3}
+      <p>Now please review your transferm information and click CONFIRM to submit tramsaction.</p>
+      <p><span class="uk-text-uppercase">Sender: </span> <span class="uk-text-bold">{account.account}</span></p>
+      <p><span class="uk-text-uppercase">Receiver: </span> <span class="uk-text-bold">{receiver}</span></p>
+      <p><span class="uk-text-uppercase">Amount: </span> <span class="uk-text-bold">{printUnscaledCoins(amount)}</span></p>
+    {:else}
+      <p>Ops. You are lost... Go back to Account view.</p>
     {/if}
-  </div> 
 
+    <div>
+      <p class="uk-text-warning">{errorCheck}</p>
+      <button 
+        disabled={isWaiting}
+        on:click={nextClick} 
+        class="uk-button uk-button-primary uk-align-right"
+      >
+        {isWaiting 
+          ? "Await"
+          : step == 3 
+            ? "Confirm" 
+            : "Next"
+        }
+      </button>        
+      <button on:click={backClick} class="uk-button uk-button-default uk-align-right">
+        {step == 1 ? "Cancel" : "Back"}
+      </button>   
+      {#if isWaiting}     
+        <div class="uk-align-right" uk-spinner></div>
+      {/if}
+    </div> 
+  </div>
 
   <div id="transferSuccess" uk-modal>
     <div class="uk-modal-dialog uk-modal-body uk-text-center">
