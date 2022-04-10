@@ -1,9 +1,10 @@
 <script lang="ts">
-import { Link } from "svelte-navigator";
+  import { Link } from "svelte-navigator";
   import { routes } from "../../routes";
 
-  import { printCoins, unscaledCoins } from "../../coinHelpers";
+  import { printCoins } from "../../coinHelpers";
   import { _ } from "../../lang/i18n";
+  import { setAccount } from "../../accountActions";
 
   export let account;
   export let balance;
@@ -18,31 +19,14 @@ import { Link } from "svelte-navigator";
     </div>
     <div class="uk-card-body">
       <div>
-        {#if unscaledCoins(balance) < 1}
-          <!-- TODO: make this icon align verical middle. -->
-          <span class="uk-margin uk-text-warning" uk-icon="icon: info" />
-          <div uk-dropdown>
-            {$_("wallet.account_list.message")}
-          </div>
-        {/if}
-
         {printCoins(balance)}
       </div>
     </div>
     <div class="uk-card-footer">
       <div>
-
-        <!-- TODO: Link <Link to={routes.transactions}> </Link> -->
-          <span uk-icon="icon: forward; ratio: 1" alt="Send Transaction">
-            <!-- <div uk-dropdown>Send A Transaction</div> -->
-          </span>
-       
-          <!-- TODO: Link
-        <Link to={routes.events}></Link> -->
-          <span uk-icon="icon: list; ratio: 1" alt="View Events">
-            <div uk-dropdown>View All Events</div>
-          </span>
-        
+        <Link to={routes.account}> 
+          <span on:click={() => setAccount(account)} uk-icon="icon: forward; ratio: 1" alt="Send Transaction">
+        </Link>
       </div>
     </div>
   </div>

@@ -1,18 +1,11 @@
 //! interfaces for aptos API
 use anyhow::bail;
 use aptos_api_types::*;
-
-
 use reqwest::Url;
 use reqwest::{header::CONTENT_TYPE};
-
-pub const API_ENDPOINT: &str = "http:/0.0.0.0:8080";
 use rand::thread_rng;
 use rand::seq::SliceRandom;
-
 use crate::configs;
-
-
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
 pub struct ApiSchema {
   r#type: String,
@@ -46,9 +39,4 @@ pub fn pick_endpoint() -> anyhow::Result<Url> {
     Some(u) => Ok(u.to_owned()),
     None => bail!("could not find endpoint url in list")
   }
-}
-
-// We want to get the JSON object back into a type.
-fn _todo_deserialize_response(val: serde_json::Value) {
-  let s: Vec<ApiSchema> = serde_json::from_value(val).unwrap();
 }

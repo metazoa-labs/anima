@@ -11,7 +11,9 @@ use reqwest::{header::CONTENT_TYPE, Url};
 use rand_core::OsRng;
 use aptos_types::chain_id::ChainId;
 
-use crate::api::api::{API_ENDPOINT, execute_request};
+use crate::api::api::execute_request;
+
+use super::api::pick_endpoint;
 
 // Note: examples come from: https://github.com/aptos-labs/aptos-core/blob/70f68edcd1c0056cb082172065320e5ea1e54d15/api/src/tests/transactions_test.rs
 
@@ -47,8 +49,8 @@ async fn _test_post_bcs_format_transaction() -> anyhow::Result<serde_json::Value
 }
 
 pub async fn post_bcs_txn(path: &str, body: Vec<u8>) -> anyhow::Result<serde_json::Value> {
-    let base: Url = API_ENDPOINT.parse().unwrap();
-    let url = base.join(path).unwrap();
+    let base: Url = pick_endpoint()?;
+    let url = base.join(path)?;
 
     let client = reqwest::Client::new();
     let req = client

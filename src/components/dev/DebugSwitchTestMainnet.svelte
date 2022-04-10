@@ -86,11 +86,7 @@ LedgerInfo,
         type="radio"
         name="networkCb"
         checked={current_chain_id == "Testnet"}
-        on:click={() => setNetwork(NetworkID.Testnet)}
       /> Testnet
-    </label>
-        <label
-      ><input
         class="uk-radio"
         type="radio"
         name="networkCb"

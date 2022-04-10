@@ -3,6 +3,7 @@ import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
+import postcss from 'rollup-plugin-postcss';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
@@ -41,6 +42,10 @@ export default {
 		file: 'public/build/bundle.js'
 	},
 	plugins: [
+		postcss({
+      plugins: []
+    }),
+
 		svelte({
 			preprocess: sveltePreprocess({ sourceMap: !production }),
 			compilerOptions: {
@@ -52,7 +57,9 @@ export default {
 		// a separate file - better for performance
 		css({ output: 'bundle.css' }),
 
-    less(),
+    less({
+			insert: true
+		}),
 		// If you have external dependencies installed from
 		// npm, you'll most likely need these plugins. In
 		// some cases you'll need additional configuration -

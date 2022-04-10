@@ -73,8 +73,7 @@ export const setAccount = async (an_address: string, notifySucess = true) => {
   if (get(signingAccount).account == an_address) {
     return
   }
-
-
+  
   let a = findOneAccount(an_address);
 
   // optimistic switch
@@ -159,12 +158,4 @@ export function getAccountEvents(account: AccountEntry, errorCallback = null) {
         raise_error(e, false, "getAccountEvents");
       }      
     });
-}
-
-export function get_locale(): string {
-  let lang = 'en-US';
-  if (window.navigator.language) {
-    lang = window.navigator.language;
-  };
-  return lang 
 }

@@ -17,7 +17,7 @@ pub fn query_balance(account: AccountAddress) -> Result<u64, WalletError> {
 // NOTE: change String to Type
 pub fn get_balance(_account: &AccountAddress) -> Result<u64, WalletError> {
   // Mock balance
-  Ok(100)
+  Ok(1000000)
 }
 
 // NOTE: Create own event view

@@ -35,15 +35,10 @@ warp = "^0.3"
 bcs = "0.1.2"
 
 aptos-keygen = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "bedc99f124f162a898b5330ddc9537b27510fdfd"}
-
 aptos-types = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "bedc99f124f162a898b5330ddc9537b27510fdfd"}
-
 aptos-sdk = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "bedc99f124f162a898b5330ddc9537b27510fdfd"}
-
 aptos-api-types = { git = "https://github.com/aptos-labs/aptos-core.git", rev = "bedc99f124f162a898b5330ddc9537b27510fdfd"}
-
 move-core-types = { git = "https://github.com/diem/move", rev = "3fe033b112eae7df2d15ab3467624165ae510caa", version = "0.0.3", features= ["address32"] }
-
 
 [features]
 # by default Tauri runs in production mode

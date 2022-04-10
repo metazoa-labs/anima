@@ -18,11 +18,10 @@
     margin: 0px;
   }
   .page-index-selected {
-    background-color: #39f; 
-    color: white;
+    color: grey;
+    background-color: white; 
   }
   .page-index-not-selected {
-    background-color: #F0F0F0; 
-    color: grey;
+    color: white;
   }
 </style>

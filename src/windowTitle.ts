@@ -3,14 +3,16 @@ import { appWindow } from '@tauri-apps/api/window'
 export function initTitleBar() {
   document
     .getElementById('titlebar-minimize')
-    .addEventListener('click', () => appWindow.minimize())
+    .addEventListener('click', () => appWindow.minimize());
   
   // TODO: option to toggle and return to previous size
   document
     .getElementById('titlebar-maximize')
-    .addEventListener('click', () => appWindow.toggleMaximize())
+    .addEventListener('click', () => appWindow.toggleMaximize());
 
   document
     .getElementById('titlebar-close')
-    .addEventListener('click', () => appWindow.close())
+    .addEventListener('click', () => appWindow.close());
+
+  document.getElementById('titlebar-close').style.marginRight="20px";
 }

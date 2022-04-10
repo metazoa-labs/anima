@@ -3,16 +3,16 @@
   import { routes } from "../../routes";
   import { onMount, onDestroy } from "svelte";
   import { accountEvents, signingAccount } from "../../accounts";
+  import type { AccountEntry } from  "../../accounts";
   import { getAccountEvents } from "../../accountActions";
   import EventsTable from "./EventsTable.svelte";
   import EventsTableDummy from "./EventsTableDummy.svelte";
   import { _ } from "svelte-i18n";
 
+  export let account: AccountEntry = null;
+  
   let events = null;
-  let myAccount = null;
-
-  let unsubscribeAccount;
-  let unsubscribeEvents;
+  let unsubs;
 
   let loadingError = null;
 
@@ -22,41 +22,44 @@
   }
 
   onMount(async () => {
-    unsubscribeAccount = signingAccount.subscribe((account) => {
-      if (myAccount && myAccount.account == account.account) {
-        return;
-      }
-      loadingError = null;
-      myAccount = account;
-      getAccountEvents(myAccount, error => loadingError = errors[error] || error);
-      unsubscribeEvents = accountEvents.subscribe((all) => { events = all[myAccount.account] });
+    /*
+    getAccountEvents(account, (error: string) => {
+      loadingError = errors[error] || error;
     });
+    unsubs = accountEvents.subscribe((all) => { 
+      events = all[account.account] 
+    });
+    */
+    events = [
+      { transaction_version: 6, data: { e_type: "sentpayment", amount: { amount: 10000000 } , sender: "111111111111111" , receiver: account.account } },
+      { transaction_version: 5, data: { e_type: "receivedpayment", amount: { amount: 7000000 } , sender: account.account, receiver: "111111111111111" } },
+      { transaction_version: 4, data: { e_type: "sentpayment", amount: { amount: 21000000 } , sender: "111111111111111" , receiver: account.account } },
+      { transaction_version: 3, data: { e_type: "sentpayment", amount: { amount: 15000000 } , sender: "111111111111111" , receiver: account.account } },
+      { transaction_version: 2, data: { e_type: "sentpayment", amount: { amount: 6000000 } , sender: "111111111111111" , receiver: account.account } },
+      { transaction_version: 1, data: { e_type: "sentpayment", amount: { amount: 3000000 } , sender: "111111111111111" , receiver: account.account } },
+    ];
   });
 
   onDestroy(async () => {
-    unsubscribeAccount && unsubscribeAccount();
-    unsubscribeEvents && unsubscribeEvents();
+    unsubs && unsubs();
   });
+
 </script>
   
-<main class="uk-height-viewport">
-  <div style="position:relative">
-    <div class="uk-flex uk-flex-center">
-      <h2 class="  uk-text-uppercase">{$_("events.account_events")}</h2>
-    </div>
-    {#if loadingError}
-      <p class="uk-text-center uk-text-warning">{$_("events.loading.error")}</p>
-      <p class="uk-text-center uk-text-warning">{loadingError}</p>
-      {#if !myAccount.on_chain}
-        <div style="position:absolute; top:0px; left:0px">
-          <Link to={routes.home}><span class="" uk-icon="icon: arrow-left; ratio: 2;" /></Link>
-        </div>
-      {/if}
-    {:else if events == null} 
-      <span uk-spinner style="position:absolute; top:0px; left:0px"/>
-      <EventsTableDummy />
-    {:else}
-      <EventsTable {events} />
+<main>
+  <p class="uk-text-uppercase">Transfers:</p>
+  {#if loadingError}
+    <p class="uk-text-center uk-text-warning">{$_("events.loading.error")}</p>
+    <p class="uk-text-center uk-text-warning">{loadingError}</p>
+    {#if !account.on_chain}
+      <div style="position:absolute; top:0px; left:0px">
+        <Link to={routes.home}><span class="" uk-icon="icon: arrow-left; ratio: 2;" /></Link>
+      </div>
     {/if}
-  </div>
+  {:else if events == null} 
+    <span uk-spinner style="position:absolute; top:0px; left:0px"/>
+    <EventsTableDummy />
+  {:else}
+    <EventsTable {events} />
+  {/if}
 </main>

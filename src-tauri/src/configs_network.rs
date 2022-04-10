@@ -11,7 +11,7 @@ use crate::{
   wallet_error::WalletError,
 };
 
-static DEFAULT_GIT: &str = "https://raw.githubusercontent.com/metazoa-labs/anima/api/seed_peers/";
+static DEFAULT_GIT: &str = "https://raw.githubusercontent.com/metazoa-labs/anima/main/seed_peers/";
 
 #[derive(serde::Deserialize, serde::Serialize, Debug)]
 pub struct NetworkProfile {
