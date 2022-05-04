@@ -20,6 +20,11 @@ This is a skeleton for building wallets it comes with certain features out of th
 - [x] Internationalized starting with `en` and `zh_cn`.
 - [x] Set "playlists" of fullnode peers to connect to. 
 - [x] Developer debugging view.
+
+
+<img src="./assets/create-wallet.gif" alt="drawing" width="100%"/>
+
+
 ## Development
 
 ### Quick Start:
